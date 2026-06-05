@@ -79,7 +79,7 @@ public class TraineeController : ControllerBase
         {
             return NotFound();
         }
-        return Ok(response.Value);
+        return NoContent();
     }
 }
 

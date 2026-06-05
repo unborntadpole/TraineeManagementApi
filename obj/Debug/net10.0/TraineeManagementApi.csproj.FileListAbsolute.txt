@@ -47,3 +47,4 @@ C:\Users\samriddh.singh\Documents\TraineeManagementApi\obj\Debug\net10.0\refint\
 C:\Users\samriddh.singh\Documents\TraineeManagementApi\obj\Debug\net10.0\TraineeManagementApi.pdb
 C:\Users\samriddh.singh\Documents\TraineeManagementApi\obj\Debug\net10.0\TraineeManagementApi.genruntimeconfig.cache
 C:\Users\samriddh.singh\Documents\TraineeManagementApi\obj\Debug\net10.0\ref\TraineeManagementApi.dll
+C:\Users\samriddh.singh\Documents\TraineeManagementApi\obj\Debug\net10.0\TraineeManagementApi.sourcelink.json
