@@ -2,63 +2,85 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace TraineeManagementApi.Controllers;
 
-using TraineeManagementApi.Models;
+// using TraineeManagementApi.Models;
+using TraineeManagementApi.DTO;
+using TraineeManagementApi.Services;
+using TraineeManagementApi.Interfaces;
 
 [ApiController]
 [Route("/api/[controller]")]
 public class TraineeController : ControllerBase
 {
-    public static List<Trainee> trainees = [];
-    private static long id = 0;
+    private readonly ITraineeService _traineeService;
 
+    public TraineeController(ITraineeService traineeService)
+    {
+        _traineeService = traineeService;
+    }
+    
     [HttpGet(Name = "GetAllTrainees")]
     public IActionResult GetAll()
     {
-        return Ok(trainees);
+        var response = _traineeService.GetAll();
+        if (!response.IsSuccess)
+        {
+            return NotFound();
+        }
+        return Ok(response.Value);
     }
         
     [HttpGet("{id:long}")]
     public IActionResult GetById([FromRoute] long id)
     {
-        var trainee = trainees.FirstOrDefault(t => t.Id == id);
-        if (trainee == null)
+        var response = _traineeService.GetById(id);
+        if (!response.IsSuccess)
         {
             return NotFound();
         }
-        TraineeResponse response = new TraineeResponse() 
-        {
-            FirstName = trainee.FirstName,
-            LastName = trainee.LastName,
-            Email = trainee.Email,
-            TechStack = trainee.TechStack,
-            Status = trainee.Status,
-            CreatedDate = trainee.CreatedDate,
-            UpdatedDate = trainee.UpdatedDate,
-        };
-
-
-        return Ok(response);
+        return Ok(response.Value);
     }
         
     [HttpPost()]
-    public IActionResult GetById(CreateTraineeRequest trainee)
+    public IActionResult PostById(CreateTraineeRequest trainee)
     {
-        id += 1;
-        if (trainee.Id == 0)
+        var response = _traineeService.PostById(trainee);
+        if (!response.IsSuccess)
         {
-            trainee.Id = id;
-        } 
-        Trainee trainee1 = new Trainee()
+            return NotFound();
+        }
+        // return Ok();
+        // return StatusCode(StatusCodes.Status201Created, trainee);
+        return Created();
+    }
+
+    [HttpPut()]
+    public IActionResult PutById(UpdateTraineeRequest trainee)
+    {
+        var response = _traineeService.PutById(trainee);
+        if (!response.IsSuccess)
         {
-            Id = trainee.Id,
-            FirstName = trainee.FirstName,
-            LastName = trainee.LastName,
-            Email = trainee.Email,
-            TechStack = trainee.TechStack,
-            Status = trainee.Status,
-        };
-        trainees.Add(trainee1);
+            if (string.Equals(response.Error, "Trainee not found.", StringComparison.OrdinalIgnoreCase))
+            {
+                return NotFound();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
         return Ok();
     }
 
+    [HttpDelete("{id:long}")]
+    public IActionResult DeleteById([FromRoute] long id)
+    {
+        var response = _traineeService.DeleteById(id);
+        if (!response.IsSuccess)
+        {
+            return NotFound();
+        }
+        return Ok(response.Value);
+    }
 }
+
+

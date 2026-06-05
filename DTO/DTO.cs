@@ -1,17 +1,34 @@
-namespace TraineeManagementApi.Models;
+namespace TraineeManagementApi.DTO;
 
 using System.ComponentModel.DataAnnotations;
 
+
+public class Result<T>
+{
+    public bool IsSuccess { get; }
+    public T Value { get; }
+    public string Error { get; }
+
+    private Result(bool isSuccess, T value, string error)
+    {
+        IsSuccess = isSuccess;
+        Value = value;
+        Error = error;
+    }
+
+    public static Result<T> Success(T value) => new(true, value, null);
+    public static Result<T> Failure(string error) => new(false, default, error);
+}
 public class CreateTraineeRequest
 {
     public long Id { get; set; }
 
     [Required(ErrorMessage = "First name is required.")]
-    [StringLength(100, ErrorMessage = "First name must be smaller than 100 characters")]
+    [StringLength(50, ErrorMessage = "First name must be smaller than 100 characters")]
     public string FirstName { get; set; }
     
     [Required(ErrorMessage = "Last name is required.")]
-    [StringLength(100, ErrorMessage = "Last name must be smaller than 100 characters")]
+    [StringLength(50, ErrorMessage = "Last name must be smaller than 100 characters")]
     public string LastName { get; set; }
     
     [Required(ErrorMessage = "Email address is required.")]
@@ -24,8 +41,8 @@ public class CreateTraineeRequest
     [Required(ErrorMessage = "Status is required.")]
     [AllowedValues(["Active", "Inactive", "Completed"], ErrorMessage = "Enter a valid status")]
     public string Status { get; set; }
-
 }
+
 public class UpdateTraineeRequest
 {
     public long Id { get; set; }
@@ -38,6 +55,7 @@ public class UpdateTraineeRequest
 }
 public class TraineeResponse
 {
+    public long Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
