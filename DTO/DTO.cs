@@ -19,6 +19,8 @@ public class Result<T>
     public static Result<T> Success(T value) => new(true, value, null);
     public static Result<T> Failure(string error) => new(false, default, error);
 }
+
+
 public class CreateTraineeRequest
 {
     public long Id { get; set; }
@@ -45,12 +47,27 @@ public class CreateTraineeRequest
 
 public class UpdateTraineeRequest
 {
+    [Required(ErrorMessage = "ID is required.")]
     public long Id { get; set; }
+
+    [Required(ErrorMessage = "First name is required.")]
+    [StringLength(50, ErrorMessage = "First name must be smaller than 100 characters")]
     public string FirstName { get; set; }
+    
+    [Required(ErrorMessage = "Last name is required.")]
+    [StringLength(50, ErrorMessage = "Last name must be smaller than 100 characters")]
     public string LastName { get; set; }
+
+    [Required(ErrorMessage = "Email address is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email")]
     public string Email { get; set; }
+
+    [Required(ErrorMessage = "Tech stack is required.")]
     public string TechStack { get; set; }
+
+    [Required(ErrorMessage = "Status is required.")]
     public string Status { get; set; }
+
     public DateTime UpdatedDate { get; } = DateTime.UtcNow;
 }
 public class TraineeResponse
