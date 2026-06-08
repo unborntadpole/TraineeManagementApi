@@ -5,7 +5,6 @@ namespace TraineeManagementApi.Controllers;
 // using TraineeManagementApi.Models;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Services;
-using TraineeManagementApi.Interfaces;
 
 [ApiController]
 [Route("/api/[controller]")]
@@ -19,9 +18,9 @@ public class TraineeController : ControllerBase
     }
     
     [HttpGet(Name = "GetAllTrainees")]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var response = _traineeService.GetAll();
+        var response = await _traineeService.GetAll();
         if (!response.IsSuccess)
         {
             return NotFound();
@@ -30,9 +29,9 @@ public class TraineeController : ControllerBase
     }
         
     [HttpGet("{id:long}")]
-    public IActionResult GetById([FromRoute] long id)
+    public async Task<IActionResult> GetById([FromRoute] long id)
     {
-        var response = _traineeService.GetById(id);
+        var response = await _traineeService.GetById(id);
         if (!response.IsSuccess)
         {
             return NotFound();
@@ -41,9 +40,9 @@ public class TraineeController : ControllerBase
     }
         
     [HttpPost()]
-    public IActionResult PostById(CreateTraineeRequest trainee)
+    public async Task<IActionResult> PostById(CreateTraineeRequest trainee)
     {
-        var response = _traineeService.PostById(trainee);
+        var response = await _traineeService.PostById(trainee);
         if (!response.IsSuccess)
         {
             return NotFound();
@@ -54,9 +53,9 @@ public class TraineeController : ControllerBase
     }
 
     [HttpPut()]
-    public IActionResult PutById(UpdateTraineeRequest trainee)
+    public async Task<IActionResult> PutById(UpdateTraineeRequest trainee)
     {
-        var response = _traineeService.PutById(trainee);
+        var response = await _traineeService.PutById(trainee);
         if (!response.IsSuccess)
         {
             if (string.Equals(response.Error, "Trainee not found.", StringComparison.OrdinalIgnoreCase))
@@ -72,9 +71,9 @@ public class TraineeController : ControllerBase
     }
 
     [HttpDelete("{id:long}")]
-    public IActionResult DeleteById([FromRoute] long id)
+    public async Task<IActionResult> DeleteById([FromRoute] long id)
     {
-        var response = _traineeService.DeleteById(id);
+        var response = await _traineeService.DeleteById(id);
         if (!response.IsSuccess)
         {
             return NotFound();
