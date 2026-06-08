@@ -1,5 +1,5 @@
 namespace TraineeManagementApi.DTO;
-
+using TraineeManagementApi.Models;
 using System.ComponentModel.DataAnnotations;
 
 
@@ -65,4 +65,17 @@ public class TraineeResponse
     public DateTime CreatedDate { get; set;}
     public DateTime? UpdatedDate { get; set; }
 
+    public TraineeResponse() {}
+
+    public TraineeResponse(Trainee trainee)
+    {
+        Id = trainee.Id;
+        FirstName = trainee.FirstName;
+        LastName = trainee.LastName;
+        Email = trainee.Email;
+        TechStack = trainee.TechStack;
+        Status = trainee.Status;
+        CreatedDate = trainee.CreatedDate;
+        UpdatedDate = trainee.UpdatedDate;
+    }
 }

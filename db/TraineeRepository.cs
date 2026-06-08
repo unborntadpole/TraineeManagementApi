@@ -13,9 +13,23 @@ public class TraineeRepository : ITraineeRepository
         _context = context;
     }
 
-    public async Task<IEnumerable<Trainee>> GetAllAsync()
+    public async Task<IEnumerable<Trainee>> GetAllAsync(string? search)
     {
-        return await _context.Trainees.ToListAsync();
+        var query = await _context.Trainees.ToListAsync();
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            search = search.ToLower();
+            query = 
+            (from trainee in query 
+            where trainee.FirstName.ToLower().Contains(search) 
+            || trainee.LastName.ToLower().Contains(search)
+            || trainee.Email.ToLower().Contains(search)
+            || trainee.TechStack.ToLower().Contains(search)
+            select trainee) 
+            .ToList();
+        }
+        
+        return query;
     }
 
     public async Task<Trainee?> GetByIdAsync(long id)

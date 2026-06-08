@@ -9,7 +9,6 @@ using TraineeManagementApi.db;
 
 public class TraineeService : ITraineeService
 {
-    long id = 0;
     private readonly ITraineeRepository _repository;
 
     public TraineeService(ITraineeRepository repository)
@@ -18,23 +17,14 @@ public class TraineeService : ITraineeService
     }
 
 
-    public async Task<Result<List<TraineeResponse>>> GetAll()
+    public async Task<Result<List<TraineeResponse>>> GetAll(string? search)
     {
-        var trainees = await _repository.GetAllAsync();
         List<TraineeResponse> trainees2 = [];
+
+        var trainees = await _repository.GetAllAsync(search);
         foreach (var trainee in trainees)
         {
-            TraineeResponse trainee2 = new TraineeResponse()
-            {
-                Id = trainee.Id,
-                FirstName = trainee.FirstName,
-                LastName = trainee.LastName,
-                Email = trainee.Email,
-                TechStack = trainee.TechStack,
-                Status = trainee.Status,
-                CreatedDate = trainee.CreatedDate,
-                UpdatedDate = trainee.UpdatedDate,
-            };
+            TraineeResponse trainee2 = new TraineeResponse(trainee);
             trainees2.Add(trainee2);
         }
         return Result<List<TraineeResponse>>.Success(trainees2);
@@ -47,24 +37,23 @@ public class TraineeService : ITraineeService
         {
             return Result<TraineeResponse>.Failure("Trainee not found.");
         }
-        TraineeResponse response = new TraineeResponse()
-        {
-            Id = trainee.Id,
-            FirstName = trainee.FirstName,
-            LastName = trainee.LastName,
-            Email = trainee.Email,
-            TechStack = trainee.TechStack,
-            Status = trainee.Status,
-            CreatedDate = trainee.CreatedDate,
-            UpdatedDate = trainee.UpdatedDate,
-        };
+        // TraineeResponse response = new TraineeResponse()
+        // {
+        //     Id = trainee.Id,
+        //     FirstName = trainee.FirstName,
+        //     LastName = trainee.LastName,
+        //     Email = trainee.Email,
+        //     TechStack = trainee.TechStack,
+        //     Status = trainee.Status,
+        //     CreatedDate = trainee.CreatedDate,
+        //     UpdatedDate = trainee.UpdatedDate,
+        // };
+        TraineeResponse response = new TraineeResponse(trainee);
         return Result<TraineeResponse>.Success(response);
     }
 
     public async Task<Result<long>> PostById( CreateTraineeRequest trainee)
     {
-        id += 1;
-        trainee.Id = id;
         // Trainee trainee1 = new Trainee()
         // {
         //     Id = trainee.Id,
@@ -77,7 +66,7 @@ public class TraineeService : ITraineeService
         Trainee trainee1 = new Trainee(trainee);
         await _repository.AddAsync(trainee1);
         await _repository.SaveChangesAsync();
-        return Result<long>.Success(id);
+        return Result<long>.Success(200);
     }
 
     public async Task<Result<long>> PutById(UpdateTraineeRequest trainee)

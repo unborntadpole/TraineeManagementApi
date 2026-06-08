@@ -11,7 +11,7 @@ public class Trainee
     public string TechStack { get; set; }
     public string Status { get; set; }
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
 
     public Trainee(CreateTraineeRequest trainee)
     {

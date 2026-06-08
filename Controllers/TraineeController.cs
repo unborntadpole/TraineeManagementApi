@@ -18,9 +18,9 @@ public class TraineeController : ControllerBase
     }
     
     [HttpGet(Name = "GetAllTrainees")]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(string? search)
     {
-        var response = await _traineeService.GetAll();
+        var response = await _traineeService.GetAll(search);
         if (!response.IsSuccess)
         {
             return NotFound();

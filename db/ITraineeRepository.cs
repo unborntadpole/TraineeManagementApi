@@ -6,7 +6,7 @@ namespace TraineeManagementApi.db;
 
 public interface ITraineeRepository
 {
-    Task<IEnumerable<Trainee>> GetAllAsync();
+    Task<IEnumerable<Trainee>> GetAllAsync(string? search);
     Task<Trainee?> GetByIdAsync(long id);
     Task AddAsync(Trainee trainee);
     void Update(Trainee trainee);
