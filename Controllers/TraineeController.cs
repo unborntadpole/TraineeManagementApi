@@ -1,11 +1,10 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace TraineeManagementApi.Controllers;
-
-// using TraineeManagementApi.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Services;
 
+[Authorize]
 [ApiController]
 [Route("/api/[controller]")]
 public class TraineeController : ControllerBase

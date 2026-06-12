@@ -15,7 +15,7 @@ public class Trainee
 
     public Trainee(CreateTraineeRequest trainee)
     {
-        Id = uuid;
+        // Id = uuid;
         FirstName = trainee.FirstName;
         LastName = trainee.LastName;
         Email = trainee.Email;

@@ -9,17 +9,34 @@ An ASP .NET Core Web project to understand syntax and usage of C# and .NET
 
 **Backend:** ASP.NET Core Web
 
-**Database:** InMeemory Database
+**Database:** MySQL Database
 
 **Language:** C#
 
 
 ## How to run
 
+Modify the connections string in appsettings.json:
 
-**Development Version:** Run the following bash command in the same directory as the .csproj file.
+```
+"ConnectionStrings": {
+    "DefaultConnection": "your-connection-string"
+  }
+```
 
-dotnet watch run --launch-profile https
+#### Run the following bash commands in the same directory as the .csproj file:
+
+Apply migrations to your database:
+
+```
+dotnet ef database update
+```
+
+Run project:
+
+```
+dotnet run
+```
 
 
 ## API Reference

@@ -70,6 +70,7 @@ public class UpdateTraineeRequest
 
     public DateTime UpdatedDate { get; } = DateTime.UtcNow;
 }
+
 public class TraineeResponse
 {
     public long Id { get; set; }
@@ -96,3 +97,29 @@ public class TraineeResponse
         UpdatedDate = trainee.UpdatedDate;
     }
 }
+
+
+public class LoginRequest
+{
+    [Required]
+    public string Username { get; set; }
+
+    [Required]
+    public string Password { get; set; }
+
+}
+
+public class UserResponse
+{
+    public long Id { get; set; }
+    public string Username { get; set; }
+    public string Role { get; set; }
+}
+
+public class LoginResponse
+{
+    public string Token { get; set; }
+    public int ExpiresIn { get; set; }
+    public UserResponse User { get; set; }
+}
+

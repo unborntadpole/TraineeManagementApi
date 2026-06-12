@@ -1,6 +1,5 @@
 namespace TraineeManagementApi.Services;
 
-using TraineeManagementApi.Models;
 using TraineeManagementApi.DTO;
 
 public interface ITraineeService
