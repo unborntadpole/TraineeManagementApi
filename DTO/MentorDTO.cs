@@ -2,26 +2,7 @@ namespace TraineeManagementApi.DTO;
 using TraineeManagementApi.Models;
 using System.ComponentModel.DataAnnotations;
 
-
-public class Result<T>
-{
-    public bool IsSuccess { get; }
-    public T Value { get; }
-    public string Error { get; }
-
-    private Result(bool isSuccess, T value, string error)
-    {
-        IsSuccess = isSuccess;
-        Value = value;
-        Error = error;
-    }
-
-    public static Result<T> Success(T value) => new(true, value, null);
-    public static Result<T> Failure(string error) => new(false, default, error);
-}
-
-
-public class CreateTraineeRequest
+public class CreateMentorRequest
 {
     public long Id { get; set; }
 
@@ -37,15 +18,15 @@ public class CreateTraineeRequest
     [EmailAddress(ErrorMessage = "Invalid email")]
     public string Email { get; set; }
 
-    [Required(ErrorMessage = "Tech stack is required.")]
-    public string TechStack { get; set; }
+    [Required(ErrorMessage = "Expertise is required.")]
+    public string Expertise { get; set; }
 
     [Required(ErrorMessage = "Status is required.")]
     [AllowedValues(["Active", "Inactive", "Completed"], ErrorMessage = "Enter a valid status")]
     public string Status { get; set; }
 }
 
-public class UpdateTraineeRequest
+public class UpdateMentorRequest
 {
     [Required(ErrorMessage = "ID is required.")]
     public long Id { get; set; }
@@ -63,7 +44,7 @@ public class UpdateTraineeRequest
     public string Email { get; set; }
 
     [Required(ErrorMessage = "Tech stack is required.")]
-    public string TechStack { get; set; }
+    public string Expertise { get; set; }
 
     [Required(ErrorMessage = "Status is required.")]
     public string Status { get; set; }
@@ -71,55 +52,30 @@ public class UpdateTraineeRequest
     public DateTime UpdatedDate { get; } = DateTime.UtcNow;
 }
 
-public class TraineeResponse
+public class MentorResponse
 {
     public long Id { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public string TechStack { get; set; }
+    public string Expertise { get; set; }
     public string Status { get; set; }
     
     public DateTime CreatedDate { get; set;}
-    public DateTime? UpdatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; }
 
-    public TraineeResponse() {}
+    public MentorResponse() {}
 
-    public TraineeResponse(Trainee trainee)
+    public MentorResponse(Mentor mentor)
     {
-        Id = trainee.Id;
-        FirstName = trainee.FirstName;
-        LastName = trainee.LastName;
-        Email = trainee.Email;
-        TechStack = trainee.TechStack;
-        Status = trainee.Status;
-        CreatedDate = trainee.CreatedDate;
-        UpdatedDate = trainee.UpdatedDate;
+        Id = mentor.Id;
+        FirstName = mentor.FirstName;
+        LastName = mentor.LastName;
+        Email = mentor.Email;
+        Expertise = mentor.Expertise;
+        Status = mentor.Status;
+        CreatedDate = mentor.CreatedDate;
+        UpdatedDate = mentor.UpdatedDate;
     }
-}
-
-
-public class LoginRequest
-{
-    [Required]
-    public string Username { get; set; }
-
-    [Required]
-    public string Password { get; set; }
-
-}
-
-public class UserResponse
-{
-    public long Id { get; set; }
-    public string Username { get; set; }
-    public string Role { get; set; }
-}
-
-public class LoginResponse
-{
-    public string Token { get; set; }
-    public int ExpiresIn { get; set; }
-    public UserResponse User { get; set; }
 }
 

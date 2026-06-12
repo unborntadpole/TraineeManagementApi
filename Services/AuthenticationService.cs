@@ -10,11 +10,14 @@ public class AuthenticationService : IAuthenticationService
 
     private readonly JwtService _jwtService;
 
-    public AuthenticationService(IPasswordHelper passwordHelper, IUserRepository userRepository, JwtService jwtService)
+    private readonly ILogger<AuthenticationService> _logger;
+
+    public AuthenticationService(IPasswordHelper passwordHelper, IUserRepository userRepository, JwtService jwtService, ILogger<AuthenticationService> logger)
     {
         _passwordHelper = passwordHelper;
         _repository = userRepository;
         _jwtService = jwtService;
+        _logger = logger;
     }
 
     public async Task<Result<LoginResponse>> Login(LoginRequest request)
@@ -22,6 +25,7 @@ public class AuthenticationService : IAuthenticationService
         string? password = await _repository.GetUserPassword(request.Username);
         if (password == null)
         {
+            _logger.LogWarning("Log in failed: User not found");
             return Result<LoginResponse>.Failure("User not found");
         }
         
@@ -34,10 +38,12 @@ public class AuthenticationService : IAuthenticationService
                 ExpiresIn = 3600,
                 User = user  
             };
+            _logger.LogInformation("Log in LogInformation");
             return Result<LoginResponse>.Success(response);
         }
         else
         {
+            _logger.LogWarning("Log in failed: Password Incorrect");
             return Result<LoginResponse>.Failure("Incorrect password");
         }
 

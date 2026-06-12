@@ -5,7 +5,7 @@ using TraineeManagementApi.DTO;
 public interface ITraineeService
 {
 
-    Task<Result<List<TraineeResponse>>> GetAll(string? search);
+    Task<Result<SearchResponse>> GetAll(SearchQuery searchQuery);
     Task<Result<TraineeResponse>> GetById(long id);
     Task<Result<long>> PostById( CreateTraineeRequest trainee);
     Task<Result<long>> PutById(UpdateTraineeRequest trainee);

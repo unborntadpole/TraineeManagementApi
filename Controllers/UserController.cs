@@ -6,12 +6,12 @@ using TraineeManagementApi.DTO;
 using TraineeManagementApi.Services;
 
 [ApiController]
-[Route("/api/[controller]")]
-public class UserController : ControllerBase
+[Route("/api/auth/[controller]")]
+public class LoginController : ControllerBase
 {
     private readonly IAuthenticationService _authService;
 
-    public UserController(IAuthenticationService authService)
+    public LoginController(IAuthenticationService authService)
     {
         _authService = authService;
     }

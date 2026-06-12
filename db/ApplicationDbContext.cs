@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
         
     }
     public DbSet<Trainee> Trainees { get; set; }
+    public DbSet<Mentor> Mentors { get; set; }
     public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,6 +20,10 @@ public class ApplicationDbContext : DbContext
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
         
+        modelBuilder.Entity<Trainee>()
+            .Property(u => u.Id)
+            .ValueGeneratedOnAdd();
+            
         modelBuilder.Entity<Trainee>()
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
