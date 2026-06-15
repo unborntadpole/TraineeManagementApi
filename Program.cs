@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+// using FluentValidation;
+
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -61,6 +63,8 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher<string>, PasswordHasher<string>>();
 builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<CreateTraineeRequestValidator>();
+builder.Services.AddScoped<UpdateTraineeRequestValidator>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtConfig");
@@ -93,6 +97,10 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+// builder.Services.AddFluentValidationAutoValidation();
+// builder.Services.AddValidatorsFromAssemblyContaining<CreateTraineeRequestValidator>();
+
 builder.Services.AddOpenApi();
 
 // builder.Services.AddDbContext<ApplicationDbContext>(

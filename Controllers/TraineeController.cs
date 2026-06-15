@@ -10,10 +10,14 @@ using TraineeManagementApi.Services;
 public class TraineeController : ControllerBase
 {
     private readonly ITraineeService _traineeService;
+    private readonly CreateTraineeRequestValidator _createRequestValidator;
+    private readonly UpdateTraineeRequestValidator _updateRequestValidator;
 
-    public TraineeController(ITraineeService traineeService)
+    public TraineeController(ITraineeService traineeService, CreateTraineeRequestValidator requestValidator, UpdateTraineeRequestValidator updateRequestValidator)
     {
         _traineeService = traineeService;
+        _createRequestValidator = requestValidator;
+        _updateRequestValidator = updateRequestValidator;
     }
     
     [HttpGet(Name = "GetAllTrainees")]
@@ -22,7 +26,11 @@ public class TraineeController : ControllerBase
         var response = await _traineeService.GetAll(searchQuery);
         if (!response.IsSuccess)
         {
-            return NotFound();
+            if (response.ErrorCode == 500)
+            {
+                return StatusCode(response.ErrorCode, response.Error);
+            }
+            else return NotFound(response.Error);
         }
         return Ok(response.Value);
     }
@@ -33,7 +41,11 @@ public class TraineeController : ControllerBase
         var response = await _traineeService.GetById(id);
         if (!response.IsSuccess)
         {
-            return NotFound();
+            if (response.ErrorCode == 500)
+            {
+                return StatusCode(response.ErrorCode, response.Error);
+            }
+            else return NotFound();
         }
         return Ok(response.Value);
     }
@@ -41,10 +53,19 @@ public class TraineeController : ControllerBase
     [HttpPost()]
     public async Task<IActionResult> PostById(CreateTraineeRequest trainee)
     {
+        var validator = _createRequestValidator.Validate(trainee);
+        if (! validator.IsValid)
+        {
+            return BadRequest(validator.Errors);
+        }
         var response = await _traineeService.PostById(trainee);
         if (!response.IsSuccess)
         {
-            return NotFound();
+            if (response.ErrorCode == 500)
+            {
+                return StatusCode(response.ErrorCode, response.Error);
+            }
+            else return NotFound();
         }
         // return Ok();
         // return StatusCode(StatusCodes.Status201Created, trainee);
@@ -54,17 +75,20 @@ public class TraineeController : ControllerBase
     [HttpPut()]
     public async Task<IActionResult> PutById(UpdateTraineeRequest trainee)
     {
+        var validator = _updateRequestValidator.Validate(trainee);
+        if (! validator.IsValid)
+        {
+            return BadRequest(validator.Errors);
+        }
         var response = await _traineeService.PutById(trainee);
         if (!response.IsSuccess)
         {
-            if (string.Equals(response.Error, "Trainee not found.", StringComparison.OrdinalIgnoreCase))
+
+            if (response.ErrorCode == 500)
             {
-                return NotFound();
+                return StatusCode(response.ErrorCode, response.Error);
             }
-            else
-            {
-                return BadRequest();
-            }
+            else return NotFound();
         }
         return Ok();
     }
