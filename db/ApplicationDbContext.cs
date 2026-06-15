@@ -12,10 +12,13 @@ public class ApplicationDbContext : DbContext
     }
     public DbSet<Trainee> Trainees { get; set; }
     public DbSet<Mentor> Mentors { get; set; }
+    public DbSet<LearningTask> LearningTasks { get; set; }
     public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<User>()
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
@@ -24,8 +27,22 @@ public class ApplicationDbContext : DbContext
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
             
-        modelBuilder.Entity<Trainee>()
+        modelBuilder.Entity<Mentor>()
             .Property(u => u.Id)
             .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<User>().HasData(
+            new User 
+            { 
+                Id = 1,
+                Email = "samriddh.singh@zeuslearning.com", 
+                Username = "admin", 
+                PasswordHash = "AQAAAAIAAYagAAAAEP+QfNdJZtmZSCQUsvRTWt8NlKADYbY44q8GjYNIUhVn8c2ANxKiw50h4muvwf7ydg==", 
+                Role = "Admin", 
+                CreatedDate = DateTime.UtcNow,
+                UpdatedDate = DateTime.UtcNow
+            }
+        );
     }
 }
+

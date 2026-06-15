@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TraineeManagementApi.db;
 
@@ -10,9 +11,11 @@ using TraineeManagementApi.db;
 namespace TraineeManagementApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260615055006_LearningTaskItem3")]
+    partial class LearningTaskItem3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,18 +166,6 @@ namespace TraineeManagementApi.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1L,
-                            CreatedDate = new DateTime(2026, 6, 15, 6, 7, 49, 955, DateTimeKind.Utc).AddTicks(2694),
-                            Email = "samriddh.singh@zeuslearning.com",
-                            PasswordHash = "AQAAAAIAAYagAAAAEP+QfNdJZtmZSCQUsvRTWt8NlKADYbY44q8GjYNIUhVn8c2ANxKiw50h4muvwf7ydg==",
-                            Role = "Admin",
-                            UpdatedDate = new DateTime(2026, 6, 15, 6, 7, 49, 955, DateTimeKind.Utc).AddTicks(2943),
-                            Username = "admin"
-                        });
                 });
 #pragma warning restore 612, 618
         }

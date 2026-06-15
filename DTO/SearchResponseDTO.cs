@@ -17,7 +17,16 @@ public class SearchResponse
         this.data = data;
 
     }
-        public SearchResponse(List<MentorResponse> data, int pageNumber, int pageSize)
+    public SearchResponse(List<MentorResponse> data, int pageNumber, int pageSize)
+    {
+        this.pageNumber = pageNumber;
+        this.pageSize = pageSize;
+        totalRecords = data.Count();
+        this.data = data;
+
+    }
+
+    public SearchResponse(List<LearningTaskResponse> data, int pageNumber, int pageSize)
     {
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
