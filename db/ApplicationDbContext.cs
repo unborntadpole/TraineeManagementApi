@@ -15,6 +15,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<LearningTask> LearningTasks { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<TaskAssignment> TaskAssignments { get; set; }
+    public DbSet<Submission> Submissions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -35,6 +36,18 @@ public class ApplicationDbContext : DbContext
             .WithMany(e => e.TaskAssignments)
             .HasForeignKey(e => e.MentorId)
             .IsRequired();
+
+        modelBuilder.Entity<Submission>()
+            .HasOne(e => e.TaskAssignment)
+            .WithOne(e => e.Submission)
+            .HasForeignKey<Submission>(e => e.TaskAssignmentId)
+            .IsRequired();
+
+        // modelBuilder.Entity<TaskAssignment>()
+        //     .HasOne(e => e.Submiosson)
+        //     .WithMany(e => e.TaskAssignments)
+        //     .HasForeignKey(e => e.MentorId)
+        //     .IsRequired();
 
         // modelBuilder.Entity<User>()
         //     .Property(u => u.Id)

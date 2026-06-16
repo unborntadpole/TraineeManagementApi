@@ -63,7 +63,7 @@ public class LearningTaskResponse
     public DateTime CreatedDate { get; set;}
     public DateTime UpdatedDate { get; set; }
 
-    public LearningTaskResponse() {}
+    // public LearningTaskResponse() {}
 
     public LearningTaskResponse(LearningTask task)
     {
@@ -77,4 +77,3 @@ public class LearningTaskResponse
         UpdatedDate = task.UpdatedDate;
     }
 }
-

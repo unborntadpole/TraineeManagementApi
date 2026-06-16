@@ -15,14 +15,16 @@ public class TaskAssignmentDTO
     
     [Required(ErrorMessage = "Learning task Id is required.")]
     public long LearningTaskId { get; set; }
+
+    public long SubmissionId { get; set; }
     
     [Required(ErrorMessage = "Assigned date is required.")]
     public DateTime AssignedDate { get; set; }
     
-    [Required(ErrorMessage = "Assigned date is required.")]
+    [Required(ErrorMessage = "Due date is required.")]
     public DateTime DueDate { get; set; }
     
-    [Required(ErrorMessage = "Due date is required.")]
+    [Required(ErrorMessage = "Status is required.")]
     public string Status { get; set; } = null!;
     public string? Remarks { get; set; }
 
@@ -35,6 +37,7 @@ public class TaskAssignmentDTO
         TraineeId = taskAssignment.TraineeId;
         MentorId = taskAssignment.MentorId;
         LearningTaskId = taskAssignment.LearningTaskId;
+        SubmissionId = taskAssignment.SubmissionId;
         Status = taskAssignment.Status;
     }
 }

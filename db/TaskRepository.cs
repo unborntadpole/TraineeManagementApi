@@ -36,6 +36,7 @@ public class LearningTaskRepository : ILearningTaskRepository
         List<LearningTaskResponse> tasks = [];
         foreach (var task in query)
         {
+            
             LearningTaskResponse task2 = new LearningTaskResponse(task);
             // Console.WriteLine(task2.Id);
             tasks.Add(task2);

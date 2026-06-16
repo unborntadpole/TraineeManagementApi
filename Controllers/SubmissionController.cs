@@ -7,25 +7,22 @@ using TraineeManagementApi.Services;
 [Authorize]
 [ApiController]
 [Route("/api/[controller]")]
-public class TaskAssignmentController : ControllerBase
+public class SubmissionController : ControllerBase
 {
-    private readonly TaskAssignmentService _service;
+    private readonly SubmissionService _service;
     
     private enum ValidStatus
     {
-        Assigned,
-        InProgress,
         Submitted,
-        Reviewed,
-        Completed 
+        Resubmitted
     }
 
-    public TaskAssignmentController(TaskAssignmentService service)
+    public SubmissionController(SubmissionService service)
     {
         _service = service;
     }
     
-    [HttpGet(Name = "GetAllTaskAssignments")]
+    [HttpGet(Name = "GetAllSubmissions")]
     public async Task<IActionResult> GetAll()
     {
         var response = await _service.GetAll();
@@ -56,18 +53,19 @@ public class TaskAssignmentController : ControllerBase
     }
         
     [HttpPost()]
-    public async Task<IActionResult> PostById(TaskAssignmentDTO taskAssignmentDTO)
+    public async Task<IActionResult> PostById(SubmissionDTO submissionDTO)
     {
         // var validator = _createRequestValidator.Validate(taskAssignmentDTO);
         // if (! validator.IsValid)
         // {
         //     return BadRequest(validator.Errors);
         // }
-        if (! Enum.IsDefined(typeof(ValidStatus),taskAssignmentDTO.Status))
+
+        if (! Enum.IsDefined(typeof(ValidStatus),submissionDTO.Status))
         {
             return BadRequest("Invalid status");
         }
-        var response = await _service.PostById(taskAssignmentDTO);
+        var response = await _service.PostById(submissionDTO);
         if (!response.IsSuccess)
         {
             if (response.ErrorCode == 500)
@@ -81,26 +79,6 @@ public class TaskAssignmentController : ControllerBase
         return Created();
     }
 
-    [HttpPut("{id:long}/status")]
-    public async Task<IActionResult> PutById([FromRoute] long id, [FromBody] string status)
-    {
-        
-        if (! Enum.IsDefined(typeof(ValidStatus),status))
-        {
-            return BadRequest("Invalid status");
-        }
-        var response = await _service.PutById(status, id);
-        if (!response.IsSuccess)
-        {
-
-            if (response.ErrorCode == 500)
-            {
-                return StatusCode(response.ErrorCode, response.Error);
-            }
-            else return NotFound(response.Error);
-        }
-        return Ok();
-    }
 }
 
 

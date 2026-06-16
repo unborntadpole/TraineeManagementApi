@@ -49,7 +49,6 @@ public class UpdateTraineeRequest
     // [Required(ErrorMessage = "Status is required.")]
     public string Status { get; set; } = null!;
 
-    public DateTime UpdatedDate { get; } = DateTime.UtcNow;
 }
 
 public class TraineeResponse
