@@ -59,6 +59,8 @@ builder.Services.AddScoped<ILearningTaskService, LearningTaskService>();
 builder.Services.AddScoped<ITraineeRepository, TraineeRepository>();
 builder.Services.AddScoped<IMentorRepository, MentorRepository>();
 builder.Services.AddScoped<ILearningTaskRepository, LearningTaskRepository>();
+builder.Services.AddScoped<TaskAssignmentRepository>();
+builder.Services.AddScoped<TaskAssignmentService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher<string>, PasswordHasher<string>>();
 builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();

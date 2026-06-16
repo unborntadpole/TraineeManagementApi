@@ -92,6 +92,46 @@ namespace TraineeManagementApi.Migrations
                     b.ToTable("Mentors");
                 });
 
+            modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("AssignedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("LearningTaskId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("MentorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Remarks")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("TraineeId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LearningTaskId");
+
+                    b.HasIndex("MentorId");
+
+                    b.HasIndex("TraineeId");
+
+                    b.ToTable("TaskAssignments");
+                });
+
             modelBuilder.Entity("TraineeManagementApi.Models.Trainee", b =>
                 {
                     b.Property<long>("Id")
@@ -168,13 +208,55 @@ namespace TraineeManagementApi.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedDate = new DateTime(2026, 6, 15, 6, 7, 49, 955, DateTimeKind.Utc).AddTicks(2694),
+                            CreatedDate = new DateTime(2026, 6, 15, 11, 46, 41, 309, DateTimeKind.Utc).AddTicks(4108),
                             Email = "samriddh.singh@zeuslearning.com",
                             PasswordHash = "AQAAAAIAAYagAAAAEP+QfNdJZtmZSCQUsvRTWt8NlKADYbY44q8GjYNIUhVn8c2ANxKiw50h4muvwf7ydg==",
                             Role = "Admin",
-                            UpdatedDate = new DateTime(2026, 6, 15, 6, 7, 49, 955, DateTimeKind.Utc).AddTicks(2943),
+                            UpdatedDate = new DateTime(2026, 6, 15, 11, 46, 41, 309, DateTimeKind.Utc).AddTicks(4330),
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>
+                {
+                    b.HasOne("TraineeManagementApi.Models.LearningTask", "LearningTask")
+                        .WithMany("TaskAssignments")
+                        .HasForeignKey("LearningTaskId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TraineeManagementApi.Models.Mentor", "Mentor")
+                        .WithMany("TaskAssignments")
+                        .HasForeignKey("MentorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TraineeManagementApi.Models.Trainee", "Trainee")
+                        .WithMany("TaskAssignments")
+                        .HasForeignKey("TraineeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LearningTask");
+
+                    b.Navigation("Mentor");
+
+                    b.Navigation("Trainee");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.LearningTask", b =>
+                {
+                    b.Navigation("TaskAssignments");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.Mentor", b =>
+                {
+                    b.Navigation("TaskAssignments");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.Trainee", b =>
+                {
+                    b.Navigation("TaskAssignments");
                 });
 #pragma warning restore 612, 618
         }

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 public class CreateMentorRequest
 {
+    [Required(ErrorMessage = "Id is required.")]
     public long Id { get; set; }
 
     [Required(ErrorMessage = "First name is required.")]

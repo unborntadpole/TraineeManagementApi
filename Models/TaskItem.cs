@@ -13,6 +13,8 @@ public class LearningTask
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
 
+    public ICollection<TaskAssignment> TaskAssignments { get; }
+
     public LearningTask(CreateLearningTaskRequest learningTask)
     {
         Title = learningTask.Title;

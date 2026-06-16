@@ -14,22 +14,39 @@ public class ApplicationDbContext : DbContext
     public DbSet<Mentor> Mentors { get; set; }
     public DbSet<LearningTask> LearningTasks { get; set; }
     public DbSet<User> Users { get; set; }
+    public DbSet<TaskAssignment> TaskAssignments { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<User>()
-            .Property(u => u.Id)
-            .ValueGeneratedOnAdd();
+        modelBuilder.Entity<TaskAssignment>()
+            .HasOne(e => e.LearningTask)
+            .WithMany(e => e.TaskAssignments)
+            .HasForeignKey(e => e.LearningTaskId)
+            .IsRequired();
+        modelBuilder.Entity<TaskAssignment>()
+            .HasOne(e => e.Trainee)
+            .WithMany(e => e.TaskAssignments)
+            .HasForeignKey(e => e.TraineeId)
+            .IsRequired();
+        modelBuilder.Entity<TaskAssignment>()
+            .HasOne(e => e.Mentor)
+            .WithMany(e => e.TaskAssignments)
+            .HasForeignKey(e => e.MentorId)
+            .IsRequired();
+
+        // modelBuilder.Entity<User>()
+        //     .Property(u => u.Id)
+        //     .ValueGeneratedOnAdd();
         
-        modelBuilder.Entity<Trainee>()
-            .Property(u => u.Id)
-            .ValueGeneratedOnAdd();
+        // modelBuilder.Entity<Trainee>()
+        //     .Property(u => u.Id)
+        //     .ValueGeneratedOnAdd();
             
-        modelBuilder.Entity<Mentor>()
-            .Property(u => u.Id)
-            .ValueGeneratedOnAdd();
+        // modelBuilder.Entity<Mentor>()
+        //     .Property(u => u.Id)
+        //     .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<User>().HasData(
             new User 

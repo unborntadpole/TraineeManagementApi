@@ -12,6 +12,8 @@ public class Trainee
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
 
+    public ICollection<TaskAssignment> TaskAssignments { get; }
+
     public Trainee(CreateTraineeRequest trainee)
     {
         FirstName = trainee.FirstName;

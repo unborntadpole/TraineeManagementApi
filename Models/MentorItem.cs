@@ -12,6 +12,8 @@ public class Mentor
     public DateTime CreatedDate { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedDate { get; set; } = DateTime.UtcNow;
 
+    public ICollection<TaskAssignment> TaskAssignments { get; }
+
     public Mentor(CreateMentorRequest mentor)
     {
         FirstName = mentor.FirstName;
