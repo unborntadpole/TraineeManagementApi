@@ -40,6 +40,8 @@ public class TaskAssignmentDTO
         SubmissionId = taskAssignment.SubmissionId;
         Status = taskAssignment.Status;
     }
+
+    public TaskAssignmentDTO() {}
 }
 
 

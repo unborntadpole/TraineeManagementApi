@@ -11,8 +11,8 @@ using TraineeManagementApi.db;
 namespace TraineeManagementApi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260615114641_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20260617061712_initialize")]
+    partial class initialize
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,6 +95,77 @@ namespace TraineeManagementApi.Migrations
                     b.ToTable("Mentors");
                 });
 
+            modelBuilder.Entity("TraineeManagementApi.Models.Review", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Feedback")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("MentorId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ReviewStatus")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("ReviewedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.Property<long>("SubmissionId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MentorId");
+
+                    b.HasIndex("SubmissionId")
+                        .IsUnique();
+
+                    b.ToTable("Reviews");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.Submission", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Notes")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("ReviewId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("SubmissionUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("SubmittedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<long>("TaskAssignmentId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TaskAssignmentId")
+                        .IsUnique();
+
+                    b.ToTable("Submissions");
+                });
+
             modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>
                 {
                     b.Property<long>("Id")
@@ -120,6 +191,9 @@ namespace TraineeManagementApi.Migrations
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<long>("SubmissionId")
+                        .HasColumnType("bigint");
 
                     b.Property<long>("TraineeId")
                         .HasColumnType("bigint");
@@ -211,13 +285,43 @@ namespace TraineeManagementApi.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedDate = new DateTime(2026, 6, 15, 11, 46, 41, 309, DateTimeKind.Utc).AddTicks(4108),
+                            CreatedDate = new DateTime(2026, 6, 17, 6, 17, 12, 87, DateTimeKind.Utc).AddTicks(6839),
                             Email = "samriddh.singh@zeuslearning.com",
                             PasswordHash = "AQAAAAIAAYagAAAAEP+QfNdJZtmZSCQUsvRTWt8NlKADYbY44q8GjYNIUhVn8c2ANxKiw50h4muvwf7ydg==",
                             Role = "Admin",
-                            UpdatedDate = new DateTime(2026, 6, 15, 11, 46, 41, 309, DateTimeKind.Utc).AddTicks(4330),
+                            UpdatedDate = new DateTime(2026, 6, 17, 6, 17, 12, 87, DateTimeKind.Utc).AddTicks(7000),
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.Review", b =>
+                {
+                    b.HasOne("TraineeManagementApi.Models.Mentor", "Mentor")
+                        .WithMany("Reviews")
+                        .HasForeignKey("MentorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("TraineeManagementApi.Models.Submission", "Submission")
+                        .WithOne("Review")
+                        .HasForeignKey("TraineeManagementApi.Models.Review", "SubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Mentor");
+
+                    b.Navigation("Submission");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.Submission", b =>
+                {
+                    b.HasOne("TraineeManagementApi.Models.TaskAssignment", "TaskAssignment")
+                        .WithOne("Submission")
+                        .HasForeignKey("TraineeManagementApi.Models.Submission", "TaskAssignmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TaskAssignment");
                 });
 
             modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>
@@ -254,7 +358,19 @@ namespace TraineeManagementApi.Migrations
 
             modelBuilder.Entity("TraineeManagementApi.Models.Mentor", b =>
                 {
+                    b.Navigation("Reviews");
+
                     b.Navigation("TaskAssignments");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.Submission", b =>
+                {
+                    b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>
+                {
+                    b.Navigation("Submission");
                 });
 
             modelBuilder.Entity("TraineeManagementApi.Models.Trainee", b =>

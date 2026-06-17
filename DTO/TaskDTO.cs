@@ -22,7 +22,7 @@ public class CreateLearningTaskRequest
     public DateTime DueDate { get; set; }
 
     [Required(ErrorMessage = "Status is required.")]
-    [AllowedValues(["Draft", "Published", "Closed"], ErrorMessage = "Enter a valid status")]
+    [AllowedValues(["Draft", "Published", "Closed"], ErrorMessage = "Enter a valid status - Draft, Published or Closed")]
     public string Status { get; set; } = null!;
 }
 

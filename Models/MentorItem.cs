@@ -14,6 +14,8 @@ public class Mentor
 
     public ICollection<TaskAssignment> TaskAssignments { get; }
 
+    public ICollection<Review> Reviews { get; }
+
     public Mentor(CreateMentorRequest mentor)
     {
         FirstName = mentor.FirstName;

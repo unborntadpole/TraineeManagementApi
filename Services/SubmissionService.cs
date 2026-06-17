@@ -29,7 +29,7 @@ public class SubmissionService
         }
         if (submissions == null)
         {
-            _logger.LogWarning("Submission: Get All failed: No task assignments found");
+            _logger.LogWarning("Submission: Get All failed: No submissions found");
             return Result<List<SubmissionDTO>>.Failure("");
         }
         _logger.LogInformation("Submission: Get All LogInformation");
@@ -50,7 +50,7 @@ public class SubmissionService
         }
         if (submission == null)
         {
-            _logger.LogWarning("Submission: Get by Id failed: No task assignment found with given id");
+            _logger.LogWarning("Submission: Get by Id failed: No submission found with given id");
             return Result<SubmissionDTO>.Failure("No submission with given id");
         }
         _logger.LogInformation("Submission: Get By Id executed successfully");

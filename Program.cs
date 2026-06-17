@@ -63,6 +63,8 @@ builder.Services.AddScoped<TaskAssignmentRepository>();
 builder.Services.AddScoped<TaskAssignmentService>();
 builder.Services.AddScoped<SubmissionRepository>();
 builder.Services.AddScoped<SubmissionService>();
+builder.Services.AddScoped<ReviewRepository>();
+builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher<string>, PasswordHasher<string>>();
 builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
@@ -70,6 +72,8 @@ builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<CreateTraineeRequestValidator>();
 builder.Services.AddScoped<UpdateTraineeRequestValidator>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+builder.Services.AddExceptionHandler<ExceptionHandlerService>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtConfig");
 var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);

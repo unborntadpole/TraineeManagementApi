@@ -6,18 +6,14 @@ using System.ComponentModel.DataAnnotations;
 
 public class SubmissionDTO
 {
-    private enum ValidStatus
-    {
-        Active,
-        Inactive,
-        Completed
-    }
 
     [Required(ErrorMessage = "Id is required.")]
     public long Id { get; set; }
 
     [Required(ErrorMessage = "Task assignment Id is required.")]
     public long TaskAssignmentId { get; set; }
+
+    public long ReviewId { get; set; }
     
     [Required(ErrorMessage = "Submission Url is required.")]
     public string SubmissionUrl { get; set; }
@@ -34,11 +30,13 @@ public class SubmissionDTO
     {
         Id = submission.Id;
         TaskAssignmentId = submission.TaskAssignmentId;
+        ReviewId = submission.ReviewId;
         SubmittedDate = submission.SubmittedDate;
         Notes = submission.Notes;
         SubmissionUrl = submission.SubmissionUrl;
         Status = submission.Status;
     }
+    public SubmissionDTO() {}
 }
 
 

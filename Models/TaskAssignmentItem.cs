@@ -7,7 +7,7 @@ public class TaskAssignment
     public string Status { get; set; }
     public DateTime AssignedDate { get; set; }
     public DateTime DueDate { get; set; }
-    public string Remarks { get; set; }
+    public string? Remarks { get; set; }
 
     public long TraineeId { get; set; }
     public Trainee Trainee { get; set; }
