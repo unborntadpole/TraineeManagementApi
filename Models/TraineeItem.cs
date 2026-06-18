@@ -14,7 +14,7 @@ public class Trainee
 
     public ICollection<TaskAssignment> TaskAssignments { get; }
 
-    public Trainee(CreateTraineeRequest trainee)
+    public Trainee(TraineeRequest trainee)
     {
         FirstName = trainee.FirstName;
         LastName = trainee.LastName;

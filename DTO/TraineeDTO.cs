@@ -2,7 +2,7 @@ namespace TraineeManagementApi.DTO;
 using TraineeManagementApi.Models;
 using System.ComponentModel.DataAnnotations;
 
-public class CreateTraineeRequest
+public class TraineeRequest
 {
     public long Id { get; set; }
 
@@ -26,30 +26,30 @@ public class CreateTraineeRequest
     public string Status { get; set; } = null!;
 }
 
-public class UpdateTraineeRequest
-{
-    // [Required(ErrorMessage = "ID is required.")]
-    public long Id { get; set; }
+// public class UpdateTraineeRequest
+// {
+//     // [Required(ErrorMessage = "ID is required.")]
+//     public long Id { get; set; }
 
-    // [Required(ErrorMessage = "First name is required.")]
-    // [StringLength(50, ErrorMessage = "First name must be smaller than 100 characters")]
-    public string FirstName { get; set; } = null!;
+//     // [Required(ErrorMessage = "First name is required.")]
+//     // [StringLength(50, ErrorMessage = "First name must be smaller than 100 characters")]
+//     public string FirstName { get; set; } = null!;
     
-    // [Required(ErrorMessage = "Last name is required.")]
-    // [StringLength(50, ErrorMessage = "Last name must be smaller than 100 characters")]
-    public string LastName { get; set; } = null!;
+//     // [Required(ErrorMessage = "Last name is required.")]
+//     // [StringLength(50, ErrorMessage = "Last name must be smaller than 100 characters")]
+//     public string LastName { get; set; } = null!;
 
-    // [Required(ErrorMessage = "Email address is required.")]
-    // [EmailAddress(ErrorMessage = "Invalid email")]
-    public string Email { get; set; } = null!;
+//     // [Required(ErrorMessage = "Email address is required.")]
+//     // [EmailAddress(ErrorMessage = "Invalid email")]
+//     public string Email { get; set; } = null!;
 
-    // [Required(ErrorMessage = "Tech stack is required.")]
-    public string TechStack { get; set; } = null!;
+//     // [Required(ErrorMessage = "Tech stack is required.")]
+//     public string TechStack { get; set; } = null!;
 
-    // [Required(ErrorMessage = "Status is required.")]
-    public string Status { get; set; } = null!;
+//     // [Required(ErrorMessage = "Status is required.")]
+//     public string Status { get; set; } = null!;
 
-}
+// }
 
 public class TraineeResponse
 {

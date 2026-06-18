@@ -34,11 +34,12 @@ public class TraineeService : ITraineeService
         if (trainees == null)
         {
             _logger.LogWarning("Trainee: Get All failed: No trainees found with given keywords");
-            return Result<SearchResponse>.Failure("No trainees found with given keywords");
+            // return Result<SearchResponse>.Failure("No trainees found with given keywords");
+            return Result<SearchResponse>.ServerError("No trainees found with given keywords", 404);
         }
         SearchResponse response = new SearchResponse(trainees, searchQuery.pageNumber, searchQuery.pageSize);
         _logger.LogInformation("Trainee: Get All LogInformation");
-        return Result<SearchResponse>.Success(response);
+        return Result<SearchResponse>.SuccessWithCode(response, 200);
     }
 
     public async Task<Result<TraineeResponse>> GetById(long id)
@@ -56,14 +57,16 @@ public class TraineeService : ITraineeService
         if (trainee == null)
         {
             _logger.LogWarning("Trainee: Get with Id failed: No trainee found with given Id");
-            return Result<TraineeResponse>.Failure("Trainee not found.");
+            // return Result<TraineeResponse>.Failure("Trainee not found.");
+            return Result<TraineeResponse>.ServerError("Trainee not found.", 404);
         }
         TraineeResponse response = new TraineeResponse(trainee);
         _logger.LogInformation("Trainee: Get with Id successful");
-        return Result<TraineeResponse>.Success(response);
+        // return Result<TraineeResponse>.Success(response);
+        return Result<TraineeResponse>.SuccessWithCode(response, 200);
     }
 
-    public async Task<Result<long>> PostById( CreateTraineeRequest trainee)
+    public async Task<Result<string>> PostById( TraineeRequest trainee)
     {
         Trainee trainee1 = new Trainee(trainee);
         try
@@ -74,13 +77,14 @@ public class TraineeService : ITraineeService
         catch
         {
             _logger.LogWarning("Trainee: Create request failed: Problems with database");
-            return Result<long>.ServerError("Problems with database..", 500);
+            return Result<string>.ServerError("Problems with database..", 500);
         }
         _logger.LogInformation("Trainee: Post successful");
-        return Result<long>.Success(200);
+        // return Result<string>.Success("200");
+        return Result<string>.SuccessWithCode("Post Successful", 201);
     }
 
-    public async Task<Result<long>> PutById(UpdateTraineeRequest trainee)
+    public async Task<Result<string>> PutById(TraineeRequest trainee)
     {
         Trainee old_trainee;
         try
@@ -90,12 +94,13 @@ public class TraineeService : ITraineeService
         catch
         {
             _logger.LogWarning("Trainee: Failed to get data");
-            return Result<long>.ServerError("Problems with database..", 500);
+            return Result<string>.ServerError("Problems with database..", 500);
         }
         if (old_trainee == null)
         {
             _logger.LogWarning("Trainee: Put by Id failed - Id not found");
-            return Result<long>.Failure("Trainee not found.");
+            // return Result<string>.Failure("Trainee not found.");
+            return Result<string>.ServerError("Trainee not found.", 404);
         }
         try
         {
@@ -108,18 +113,19 @@ public class TraineeService : ITraineeService
             _repository.Update(old_trainee);
             await _repository.SaveChangesAsync();
             _logger.LogInformation("Trainee: Put by Id successful");
-            return Result<long>.Success(200);
+            // return Result<string>.Success(200);
+            return Result<string>.SuccessWithCode($"Put successful for trainee with id: {trainee.Id}", 201);
             
         }
         catch
         {
             _logger.LogWarning("Trainee: Failed to update data");
-            return Result<long>.ServerError("Database error..", 500);
+            return Result<string>.ServerError("Database error..", 500);
         }
     }
 
 
-    public async Task<Result<long>> DeleteById(long id)
+    public async Task<Result<string>> DeleteById(long id)
     {
         Trainee trainee;
         try
@@ -129,13 +135,14 @@ public class TraineeService : ITraineeService
         catch
         {
             _logger.LogWarning("Trainee: Problems with database");
-            return Result<long>.ServerError("Failed to connect to database..", 500);
+            return Result<string>.ServerError("Failed to connect to database..", 500);
         }
         
         if (trainee == null)
         {
             _logger.LogWarning("Trainee: Delete by Id failed - Id not found");
-            return Result<long>.Failure("Id not found");
+            // return Result<string>.Failure("Id not found");
+            return Result<string>.ServerError("Id not found", 404);
         }
         try
         {
@@ -145,10 +152,11 @@ public class TraineeService : ITraineeService
         catch
         {
             _logger.LogWarning("Trainee: Failed to delete in database");
-            return Result<long>.ServerError("Failed to delete in the database", 500);
+            return Result<string>.ServerError("Failed to delete in the database", 500);
         }
         _logger.LogInformation("Trainee: Delete by Id successful");
-        return Result<long>.Success(200);
+        // return Result<string>.Success(200);
+        return Result<string>.SuccessWithCode($"Trainee with id {id} deleted", 204);
     }
 
 }

@@ -24,34 +24,40 @@ public class TraineeController : ControllerBase
     public async Task<IActionResult> GetAll([FromQuery] SearchQuery searchQuery)
     {
         var response = await _traineeService.GetAll(searchQuery);
-        if (!response.IsSuccess)
-        {
-            if (response.ErrorCode == 500)
-            {
-                return StatusCode(response.ErrorCode, response.Error);
-            }
-            else return NotFound(response.Error);
-        }
-        return Ok(response.Value);
+        // if (!response.IsSuccess)
+        // {
+        //     if (response.ErrorCode == 500)
+        //     {
+        //         return StatusCode(response.ErrorCode, response.Error);
+        //     }
+        //     else return NotFound(response.Error);
+        // }
+        // return Ok(response.Value);
+
+        if (response.IsSuccess) return StatusCode(response.ErrorCode, response.Value);
+        return StatusCode(response.ErrorCode, response.Error);
     }
         
     [HttpGet("{id:long}")]
     public async Task<IActionResult> GetById([FromRoute] long id)
     {
         var response = await _traineeService.GetById(id);
-        if (!response.IsSuccess)
-        {
-            if (response.ErrorCode == 500)
-            {
-                return StatusCode(response.ErrorCode, response.Error);
-            }
-            else return NotFound();
-        }
-        return Ok(response.Value);
+        // if (!response.IsSuccess)
+        // {
+        //     if (response.ErrorCode == 500)
+        //     {
+        //         return StatusCode(response.ErrorCode, response.Error);
+        //     }
+        //     else return NotFound();
+        // }
+        // return Ok(response.Value);
+
+        if (response.IsSuccess) return StatusCode(response.ErrorCode, response.Value);
+        return StatusCode(response.ErrorCode, response.Error);
     }
         
     [HttpPost()]
-    public async Task<IActionResult> PostById(CreateTraineeRequest trainee)
+    public async Task<IActionResult> PostById(TraineeRequest trainee)
     {
         var validator = _createRequestValidator.Validate(trainee);
         if (! validator.IsValid)
@@ -59,21 +65,21 @@ public class TraineeController : ControllerBase
             return BadRequest(validator.Errors);
         }
         var response = await _traineeService.PostById(trainee);
-        if (!response.IsSuccess)
-        {
-            if (response.ErrorCode == 500)
-            {
-                return StatusCode(response.ErrorCode, response.Error);
-            }
-            else return NotFound();
-        }
-        // return Ok();
-        // return StatusCode(StatusCodes.Status201Created, trainee);
-        return Created();
+        // if (!response.IsSuccess)
+        // {
+        //     if (response.ErrorCode == 500)
+        //     {
+        //         return StatusCode(response.ErrorCode, response.Error);
+        //     }
+        //     else return NotFound();
+        // }
+        // return Created();
+        if (response.IsSuccess) return StatusCode(response.ErrorCode, response.Value);
+        return StatusCode(response.ErrorCode, response.Error);
     }
 
     [HttpPut()]
-    public async Task<IActionResult> PutById(UpdateTraineeRequest trainee)
+    public async Task<IActionResult> PutById(TraineeRequest trainee)
     {
         var validator = _updateRequestValidator.Validate(trainee);
         if (! validator.IsValid)
@@ -81,27 +87,33 @@ public class TraineeController : ControllerBase
             return BadRequest(validator.Errors);
         }
         var response = await _traineeService.PutById(trainee);
-        if (!response.IsSuccess)
-        {
+        // if (!response.IsSuccess)
+        // {
 
-            if (response.ErrorCode == 500)
-            {
-                return StatusCode(response.ErrorCode, response.Error);
-            }
-            else return NotFound();
-        }
-        return Ok();
+        //     if (response.ErrorCode == 500)
+        //     {
+        //         return StatusCode(response.ErrorCode, response.Error);
+        //     }
+        //     else return NotFound();
+        // }
+        // return Ok();
+
+        if (response.IsSuccess) return StatusCode(response.ErrorCode, response.Value);
+        return StatusCode(response.ErrorCode, response.Error);
     }
 
     [HttpDelete("{id:long}")]
     public async Task<IActionResult> DeleteById([FromRoute] long id)
     {
         var response = await _traineeService.DeleteById(id);
-        if (!response.IsSuccess)
-        {
-            return NotFound();
-        }
-        return NoContent();
+        // if (!response.IsSuccess)
+        // {
+        //     return NotFound();
+        // }
+        // return NoContent();
+
+        if (response.IsSuccess) return StatusCode(response.ErrorCode);//, response.Value);
+        return StatusCode(response.ErrorCode, response.Error);
     }
 }
 

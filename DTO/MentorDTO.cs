@@ -1,6 +1,7 @@
 namespace TraineeManagementApi.DTO;
 using TraineeManagementApi.Models;
 using System.ComponentModel.DataAnnotations;
+using TraineeManagementApi.Constants;
 
 public class CreateMentorRequest
 {
@@ -16,7 +17,7 @@ public class CreateMentorRequest
     public string LastName { get; set; }
     
     [Required(ErrorMessage = "Email address is required.")]
-    [EmailAddress(ErrorMessage = "Invalid email")]
+    [RegularExpression(RegexPatterns.Email, ErrorMessage = "Invalid email")]
     public string Email { get; set; }
 
     [Required(ErrorMessage = "Expertise is required.")]

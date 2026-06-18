@@ -10,10 +10,8 @@ public enum ValidStatus
     Completed
 }
 
-public class CreateTraineeRequestValidator : AbstractValidator<CreateTraineeRequest>
+public class CreateTraineeRequestValidator : AbstractValidator<TraineeRequest>
 {
-    // private readonly string[] _validStatus = ["Active", "Inactive", "Completed"];
-
     public CreateTraineeRequestValidator()
     {
         RuleFor(x => x.FirstName)
@@ -32,17 +30,14 @@ public class CreateTraineeRequestValidator : AbstractValidator<CreateTraineeRequ
             .NotEmpty().WithMessage("TechStack is required");
         
         RuleFor(x => x.Status)
-            // .Must( status => _validStatus.Contains(status)).WithMessage("Invalid status")
-            .Must( status => Enum.IsDefined(typeof(ValidStatus),status)).WithMessage("Invalid status")
-            .NotEmpty().WithMessage("Status is required");
+            .NotEmpty().WithMessage("Status is required")
+            .Must( status => Enum.IsDefined(typeof(ValidStatus),status)).WithMessage("Invalid status");
         
     }
 }
 
-public class UpdateTraineeRequestValidator : AbstractValidator<UpdateTraineeRequest>
+public class UpdateTraineeRequestValidator : AbstractValidator<TraineeRequest>
 {
-    // private readonly string[] _validStatus = ["Active", "Inactive", "Completed"];
-
     public UpdateTraineeRequestValidator()
     {
         RuleFor(x => x.Id)
@@ -64,7 +59,6 @@ public class UpdateTraineeRequestValidator : AbstractValidator<UpdateTraineeRequ
             .NotEmpty().WithMessage("TechStack is required");
         
         RuleFor(x => x.Status)
-            // .Must( status => _validStatus.Contains(status)).WithMessage("Invalid status")
             .Must( status => Enum.IsDefined(typeof(ValidStatus),status)).WithMessage("Invalid status")
             .NotEmpty().WithMessage("Status is required");
         
