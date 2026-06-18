@@ -2,13 +2,14 @@ namespace TraineeManagementApi.Services;
 
 using FluentValidation;
 using TraineeManagementApi.DTO;
+using TraineeManagementApi.Constants;
 
-public enum ValidStatus
-{
-    Active,
-    Inactive,
-    Completed
-}
+// public enum ValidStatus
+// {
+//     Active,
+//     Inactive,
+//     Completed
+// }
 
 public class CreateTraineeRequestValidator : AbstractValidator<TraineeRequest>
 {
@@ -23,15 +24,15 @@ public class CreateTraineeRequestValidator : AbstractValidator<TraineeRequest>
             .MaximumLength(50).WithMessage("Last name must be smaller than 50 characters");
         
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email is required")
+            // .NotEmpty().WithMessage("Email is required")
             .EmailAddress(FluentValidation.Validators.EmailValidationMode.Net4xRegex).WithMessage("Invalid Email");
         
         RuleFor(x => x.TechStack)
             .NotEmpty().WithMessage("TechStack is required");
         
         RuleFor(x => x.Status)
-            .NotEmpty().WithMessage("Status is required")
-            .Must( status => Enum.IsDefined(typeof(ValidStatus),status)).WithMessage("Invalid status");
+            // .NotEmpty().WithMessage("Status is required")
+            .Must( status => Enum.IsDefined(typeof(StatusEnums.TraineeStatus),status)).WithMessage("Invalid status");
         
     }
 }
@@ -52,15 +53,15 @@ public class UpdateTraineeRequestValidator : AbstractValidator<TraineeRequest>
             .MaximumLength(50).WithMessage("Last name must be smaller than 50 characters");
         
         RuleFor(x => x.Email)
-            .NotEmpty().WithMessage("Email is required")
+            // .NotEmpty().WithMessage("Email is required")
             .EmailAddress(FluentValidation.Validators.EmailValidationMode.Net4xRegex).WithMessage("Invalid Email");
         
         RuleFor(x => x.TechStack)
             .NotEmpty().WithMessage("TechStack is required");
         
         RuleFor(x => x.Status)
-            .Must( status => Enum.IsDefined(typeof(ValidStatus),status)).WithMessage("Invalid status")
-            .NotEmpty().WithMessage("Status is required");
+            // .NotEmpty().WithMessage("Status is required")
+            .Must( status => Enum.IsDefined(typeof(StatusEnums.TraineeStatus),status)).WithMessage("Invalid status");
         
     }
 }

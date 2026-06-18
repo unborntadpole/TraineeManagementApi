@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace TraineeManagementApi.Migrations
 {
     /// <inheritdoc />
-    public partial class initialize : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -103,11 +103,10 @@ namespace TraineeManagementApi.Migrations
                     Status = table.Column<string>(type: "longtext", nullable: false),
                     AssignedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DueDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    Remarks = table.Column<string>(type: "longtext", nullable: false),
+                    Remarks = table.Column<string>(type: "longtext", nullable: true),
                     TraineeId = table.Column<long>(type: "bigint", nullable: false),
                     MentorId = table.Column<long>(type: "bigint", nullable: false),
-                    LearningTaskId = table.Column<long>(type: "bigint", nullable: false),
-                    SubmissionId = table.Column<long>(type: "bigint", nullable: false)
+                    LearningTaskId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -143,8 +142,7 @@ namespace TraineeManagementApi.Migrations
                     SubmissionUrl = table.Column<string>(type: "longtext", nullable: false),
                     Notes = table.Column<string>(type: "longtext", nullable: false),
                     SubmittedDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    TaskAssignmentId = table.Column<long>(type: "bigint", nullable: false),
-                    ReviewId = table.Column<long>(type: "bigint", nullable: false)
+                    TaskAssignmentId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -192,7 +190,7 @@ namespace TraineeManagementApi.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "CreatedDate", "Email", "PasswordHash", "Role", "UpdatedDate", "Username" },
-                values: new object[] { 1L, new DateTime(2026, 6, 17, 6, 17, 12, 87, DateTimeKind.Utc).AddTicks(6839), "samriddh.singh@zeuslearning.com", "AQAAAAIAAYagAAAAEP+QfNdJZtmZSCQUsvRTWt8NlKADYbY44q8GjYNIUhVn8c2ANxKiw50h4muvwf7ydg==", "Admin", new DateTime(2026, 6, 17, 6, 17, 12, 87, DateTimeKind.Utc).AddTicks(7000), "admin" });
+                values: new object[] { 1L, new DateTime(2026, 6, 18, 5, 42, 8, 91, DateTimeKind.Utc).AddTicks(5085), "samriddh.singh@zeuslearning.com", "AQAAAAIAAYagAAAAEP+QfNdJZtmZSCQUsvRTWt8NlKADYbY44q8GjYNIUhVn8c2ANxKiw50h4muvwf7ydg==", "Admin", new DateTime(2026, 6, 18, 5, 42, 8, 91, DateTimeKind.Utc).AddTicks(5320), "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_MentorId",
@@ -202,14 +200,12 @@ namespace TraineeManagementApi.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_SubmissionId",
                 table: "Reviews",
-                column: "SubmissionId",
-                unique: true);
+                column: "SubmissionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Submissions_TaskAssignmentId",
                 table: "Submissions",
-                column: "TaskAssignmentId",
-                unique: true);
+                column: "TaskAssignmentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TaskAssignments_LearningTaskId",

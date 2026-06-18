@@ -38,16 +38,26 @@ public class ApplicationDbContext : DbContext
             .HasForeignKey(e => e.MentorId)
             .IsRequired();
 
+        // modelBuilder.Entity<Submission>()
+        //     .HasOne(e => e.TaskAssignment)
+        //     .WithOne(e => e.Submission)
+        //     .HasForeignKey<Submission>(e => e.TaskAssignmentId)
+        //     .IsRequired();
         modelBuilder.Entity<Submission>()
             .HasOne(e => e.TaskAssignment)
-            .WithOne(e => e.Submission)
-            .HasForeignKey<Submission>(e => e.TaskAssignmentId)
+            .WithMany(e => e.Submissions)
+            .HasForeignKey(e => e.TaskAssignmentId)
             .IsRequired();
 
+        // modelBuilder.Entity<Review>()
+        //     .HasOne(e => e.Submission)
+        //     .WithOne(e => e.Review)
+        //     .HasForeignKey<Review>(e => e.SubmissionId)
+        //     .IsRequired();
         modelBuilder.Entity<Review>()
             .HasOne(e => e.Submission)
-            .WithOne(e => e.Review)
-            .HasForeignKey<Review>(e => e.SubmissionId)
+            .WithMany(e => e.Reviews)
+            .HasForeignKey(e => e.SubmissionId)
             .IsRequired();
         modelBuilder.Entity<Review>()
             .HasOne(e => e.Mentor)

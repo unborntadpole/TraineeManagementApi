@@ -11,16 +11,17 @@ public class Submission
 
     public long TaskAssignmentId { get; set; }
     public TaskAssignment TaskAssignment { get; set; }
-    public long ReviewId { get; set; }
-    public Review? Review { get; set; }
+    // public long ReviewId { get; set; }
+    // public Review? Review { get; set; }
 
+    public ICollection<Review> Reviews { get; }
 
 
     public Submission(SubmissionDTO submission)
     {
         Id = submission.Id;
         TaskAssignmentId = submission.TaskAssignmentId;
-        ReviewId = submission.ReviewId;
+        // ReviewId = submission.ReviewId;
         SubmittedDate = DateTime.UtcNow;
         Notes = submission.Notes;
         SubmissionUrl = submission.SubmissionUrl;

@@ -18,8 +18,10 @@ public class TaskAssignment
     public long LearningTaskId { get; set; }
     public LearningTask LearningTask { get; set; }
 
-    public long SubmissionId { get; set; }
-    public Submission? Submission { get; set; }
+    // public long SubmissionId { get; set; }
+    // public Submission? Submission { get; set; }
+
+    public ICollection<Submission> Submissions { get; }
 
     public TaskAssignment(TaskAssignmentDTO taskAssignment)
     {
@@ -30,7 +32,7 @@ public class TaskAssignment
         TraineeId = taskAssignment.TraineeId;
         MentorId = taskAssignment.MentorId;
         LearningTaskId = taskAssignment.LearningTaskId;
-        SubmissionId = taskAssignment.SubmissionId;
+        // SubmissionId = taskAssignment.SubmissionId;
         Status = taskAssignment.Status;
     }
     public TaskAssignment() {}

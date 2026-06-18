@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Services;
+using TraineeManagementApi.Constants;
 
 [Authorize]
 [ApiController]
@@ -11,12 +12,12 @@ public class ReviewsController : ControllerBase
 {
     private readonly ReviewService _service;
     
-    private enum ValidStatus
-    {
-        Accepted,
-        ChangesRequired,
-        Rejected
-    }
+    // private enum ValidStatus
+    // {
+    //     Accepted,
+    //     ChangesRequired,
+    //     Rejected
+    // }
 
     public ReviewsController(ReviewService service)
     {
@@ -57,7 +58,7 @@ public class ReviewsController : ControllerBase
     public async Task<IActionResult> PostById(ReviewDTO reviewDTO)
     {
 
-        if (! Enum.IsDefined(typeof(ValidStatus),reviewDTO.ReviewStatus))
+        if (! Enum.IsDefined(typeof(StatusEnums.ReviewStatus),reviewDTO.ReviewStatus))
         {
             return BadRequest("Invalid status");
         }

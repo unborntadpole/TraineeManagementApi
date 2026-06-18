@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Services;
+using TraineeManagementApi.Constants;
+
 
 [Authorize]
 [ApiController]
@@ -11,14 +13,14 @@ public class TaskAssignmentController : ControllerBase
 {
     private readonly TaskAssignmentService _service;
     
-    private enum ValidStatus
-    {
-        Assigned,
-        InProgress,
-        Submitted,
-        Reviewed,
-        Completed 
-    }
+    // private enum ValidStatus
+    // {
+    //     Assigned,
+    //     InProgress,
+    //     Submitted,
+    //     Reviewed,
+    //     Completed 
+    // } 
 
     public TaskAssignmentController(TaskAssignmentService service)
     {
@@ -63,7 +65,7 @@ public class TaskAssignmentController : ControllerBase
         // {
         //     return BadRequest(validator.Errors);
         // }
-        if (! Enum.IsDefined(typeof(ValidStatus),taskAssignmentDTO.Status))
+        if (! Enum.IsDefined(typeof(StatusEnums.TaskAssignmentStatus),taskAssignmentDTO.Status))
         {
             return BadRequest("Invalid status");
         }
@@ -85,7 +87,7 @@ public class TaskAssignmentController : ControllerBase
     public async Task<IActionResult> PutById([FromRoute] long id, [FromBody] string status)
     {
         
-        if (! Enum.IsDefined(typeof(ValidStatus),status))
+        if (! Enum.IsDefined(typeof(StatusEnums.TaskAssignmentStatus),status))
         {
             return BadRequest("Invalid status");
         }

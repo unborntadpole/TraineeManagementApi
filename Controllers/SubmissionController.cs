@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Services;
+using TraineeManagementApi.Constants;
 
 [Authorize]
 [ApiController]
@@ -11,11 +12,11 @@ public class SubmissionController : ControllerBase
 {
     private readonly SubmissionService _service;
     
-    private enum ValidStatus
-    {
-        Submitted,
-        Resubmitted
-    }
+    // private enum ValidStatus
+    // {
+    //     Submitted,
+    //     Resubmitted
+    // } 
 
     public SubmissionController(SubmissionService service)
     {
@@ -61,7 +62,7 @@ public class SubmissionController : ControllerBase
         //     return BadRequest(validator.Errors);
         // }
 
-        if (! Enum.IsDefined(typeof(ValidStatus),submissionDTO.Status))
+        if (! Enum.IsDefined(typeof(StatusEnums.SubmissionStatus),submissionDTO.Status))
         {
             return BadRequest("Invalid status");
         }
