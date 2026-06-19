@@ -158,6 +158,49 @@ namespace TraineeManagementApi.Migrations
                     b.ToTable("Submissions");
                 });
 
+            modelBuilder.Entity("TraineeManagementApi.Models.SubmissionFile", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Checksum")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("GeneratedStorageName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("OriginalFileName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SubmissionId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("UploadedByUser")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<DateTime>("UploadedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubmissionId")
+                        .IsUnique();
+
+                    b.ToTable("SubmissionFiles");
+                });
+
             modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>
                 {
                     b.Property<long>("Id")
@@ -273,11 +316,11 @@ namespace TraineeManagementApi.Migrations
                         new
                         {
                             Id = 1L,
-                            CreatedDate = new DateTime(2026, 6, 18, 5, 42, 8, 91, DateTimeKind.Utc).AddTicks(5085),
+                            CreatedDate = new DateTime(2026, 6, 19, 11, 36, 5, 811, DateTimeKind.Utc).AddTicks(2227),
                             Email = "samriddh.singh@zeuslearning.com",
                             PasswordHash = "AQAAAAIAAYagAAAAEP+QfNdJZtmZSCQUsvRTWt8NlKADYbY44q8GjYNIUhVn8c2ANxKiw50h4muvwf7ydg==",
                             Role = "Admin",
-                            UpdatedDate = new DateTime(2026, 6, 18, 5, 42, 8, 91, DateTimeKind.Utc).AddTicks(5320),
+                            UpdatedDate = new DateTime(2026, 6, 19, 11, 36, 5, 811, DateTimeKind.Utc).AddTicks(2772),
                             Username = "admin"
                         });
                 });
@@ -310,6 +353,17 @@ namespace TraineeManagementApi.Migrations
                         .IsRequired();
 
                     b.Navigation("TaskAssignment");
+                });
+
+            modelBuilder.Entity("TraineeManagementApi.Models.SubmissionFile", b =>
+                {
+                    b.HasOne("TraineeManagementApi.Models.Submission", "Submission")
+                        .WithOne("SubmissionFile")
+                        .HasForeignKey("TraineeManagementApi.Models.SubmissionFile", "SubmissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Submission");
                 });
 
             modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>
@@ -354,6 +408,8 @@ namespace TraineeManagementApi.Migrations
             modelBuilder.Entity("TraineeManagementApi.Models.Submission", b =>
                 {
                     b.Navigation("Reviews");
+
+                    b.Navigation("SubmissionFile");
                 });
 
             modelBuilder.Entity("TraineeManagementApi.Models.TaskAssignment", b =>

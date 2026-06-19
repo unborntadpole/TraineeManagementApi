@@ -9,12 +9,12 @@ using Org.BouncyCastle.Asn1;
 
 public class SubmissionFileService
 {
-    private readonly ILogger<LocalFileStorageService> _logger;
+    private readonly ILogger<SubmissionFileService> _logger;
     private readonly SubmissionFileRepository _repository;
 
     private readonly IFileStorageService _fileStorageService;
 
-    public SubmissionFileService(SubmissionFileRepository repository, ILogger<LocalFileStorageService> logger, LocalFileStorageService fileStorageService)
+    public SubmissionFileService(SubmissionFileRepository repository, ILogger<SubmissionFileService> logger, IFileStorageService fileStorageService)
     {
         _repository = repository;
         _logger = logger;
