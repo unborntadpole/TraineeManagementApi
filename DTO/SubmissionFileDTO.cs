@@ -73,3 +73,19 @@ public class UploadFileRequest
     [Required]
     public string User { set; get; }
 }
+
+public class DownloadFileDTO
+{
+    public FileStream Stream { get; set; }
+
+    public string ContentType { set; get; }
+
+    public string FileName { get; set; }
+
+    public DownloadFileDTO(FileStream stream, string contentType, string fileName)
+    {
+        Stream = stream;
+        ContentType = contentType;
+        FileName = fileName;
+    }
+}

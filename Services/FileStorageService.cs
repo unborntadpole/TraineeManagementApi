@@ -7,12 +7,13 @@ using Microsoft.AspNetCore.Http;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Constants;
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc;
 
 // SaveAsync, OpenReadAsync, ExistsAsync, and DeleteAsync 
 public interface IFileStorageService
 {
     Task<Result<string>> SaveAsync(IFormFile file);
-    Task<Result<string>> OpenReadAsync(string fileName);
+    Task<Result<FileStream>> OpenReadAsync(string fileName);
     Task<Result<bool>> ExistsAsync(string fileName);
     Task<Result<string>> DeleteAsync(string fileName);
 }
@@ -67,7 +68,7 @@ public class LocalFileStorageService : IFileStorageService
         }
     }
 
-    public async Task<Result<string>> OpenReadAsync( string fileName)
+    public async Task<Result<FileStream>> OpenReadAsync( string fileName)
     {
         try
         {
@@ -76,19 +77,21 @@ public class LocalFileStorageService : IFileStorageService
             if (!File.Exists(path))
             {
                 _logger.LogWarning($"File open failed: File with name {fileName} not found");
-                return Result<string>.ServerError($"File with name {fileName} not found",404);
+                return Result<FileStream>.ServerError($"File with name {fileName} not found",404);
             }
-            using (StreamReader sr = new StreamReader(path))
-            {
-                string content= await sr.ReadToEndAsync();
-                _logger.LogInformation($"Successfully read file {fileName}");
-                return Result<string>.Success(content);
-            }
+            // using (StreamReader sr = new StreamReader(path))
+            // {
+            //     string content= await sr.ReadToEndAsync();
+            //     _logger.LogInformation($"Successfully read file {fileName}");
+            //     return Result<string>.Success(content);
+            // }
+
+            return Result<FileStream>.Success(File.OpenRead(path));
         }
         catch (Exception e)
         {
             _logger.LogWarning($"Failed to read the file {fileName}. \n{e.Message}");
-            return Result<string>.ServerError(e.Message,500);
+            return Result<FileStream>.ServerError(e.Message,500);
         }
     }
 

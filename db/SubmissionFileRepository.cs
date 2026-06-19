@@ -20,6 +20,16 @@ public class SubmissionFileRepository
 
     }
 
+    public async Task<SubmissionFile?> GetByIdAsync(long id)
+    {
+        return await _context.SubmissionFiles.FindAsync(id);
+    }
+
+    public async Task DeleteAsync(SubmissionFile file)
+    {
+        _context.SubmissionFiles.Remove(file);
+        await _context.SaveChangesAsync();
+    }
 
 }
 

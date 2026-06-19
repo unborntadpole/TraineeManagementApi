@@ -3,9 +3,7 @@ namespace TraineeManagementApi.Services;
 using TraineeManagementApi.db;
 using TraineeManagementApi.DTO;
 using System.Security.Cryptography;
-using System.Data;
 using TraineeManagementApi.Models;
-using Org.BouncyCastle.Asn1;
 
 public class SubmissionFileService
 {
@@ -57,5 +55,47 @@ public class SubmissionFileService
             return Result<PostFileResponse>.Success(response);
         }
         else return Result<PostFileResponse>.ServerError(result.Error, result.ErrorCode);
+    }
+
+    public async Task<Result<DownloadFileDTO>> GetFile(long submissionFileId)
+    {
+        SubmissionFile? fileMetadata = await _repository.GetByIdAsync(submissionFileId);
+        if (fileMetadata == null)
+        {
+            return Result<DownloadFileDTO>.ServerError($"File with id {submissionFileId} not found", 404);
+        }
+        var res = await _fileStorageService.OpenReadAsync(fileMetadata.GeneratedStorageName);
+        if (!res.IsSuccess)
+        {
+            return Result<DownloadFileDTO>.ServerError(res.Error,res.ErrorCode);
+        }
+        return Result<DownloadFileDTO>.Success(new DownloadFileDTO(res.Value, fileMetadata.ContentType, fileMetadata.OriginalFileName));
+    }
+
+    public async Task<Result<string>> DeleteFile(long id)
+    {
+        SubmissionFile? fileMetadata = await _repository.GetByIdAsync(id);
+        if (fileMetadata == null)
+        {
+            return Result<string>.ServerError($"File with id {id} not found", 404);
+        }
+        try
+        {
+            Result<string> res = await _fileStorageService.DeleteAsync(fileMetadata.GeneratedStorageName);
+            if (res.IsSuccess)
+            {
+                string name = fileMetadata.OriginalFileName;
+                await _repository.DeleteAsync(fileMetadata);
+                return Result<string>.Success($"Deleted file {name} Successfully.");
+            }
+            else
+            {
+                return res;
+            }
+        }
+        catch( Exception e)
+        {
+            return Result<string>.ServerError(e.Message, 500);
+        }
     }
 }
