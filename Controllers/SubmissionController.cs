@@ -77,7 +77,7 @@ public class SubmissionsController : ControllerBase
         return Created();
     }
 
-    [HttpPost("{id:long}/files")]
+    [HttpPost("{submissionId:long}/files")]
     public async Task<IActionResult> PostFile([FromForm]UploadFileRequest request, [FromRoute]long submissionId)
     {
         if (request.File == null || request.File.Length == 0)
