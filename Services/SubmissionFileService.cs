@@ -12,7 +12,7 @@ public class SubmissionFileService
     private readonly ILogger<LocalFileStorageService> _logger;
     private readonly SubmissionFileRepository _repository;
 
-    private readonly LocalFileStorageService _fileStorageService;
+    private readonly IFileStorageService _fileStorageService;
 
     public SubmissionFileService(SubmissionFileRepository repository, ILogger<LocalFileStorageService> logger, LocalFileStorageService fileStorageService)
     {
