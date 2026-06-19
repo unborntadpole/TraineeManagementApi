@@ -64,3 +64,12 @@ public class PostFileResponse
         UploadedDate = submissionFile.UploadedDate;
     }
 }
+
+public class UploadFileRequest
+{
+    [Required]
+    public IFormFile File { get; set; }
+
+    [Required]
+    public string User { set; get; }
+}

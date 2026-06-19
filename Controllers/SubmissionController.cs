@@ -78,13 +78,13 @@ public class SubmissionsController : ControllerBase
     }
 
     [HttpPost("{id:long}/files")]
-    public async Task<IActionResult> PostFile([FromForm]IFormFile file, string user, [FromRoute]long submissionId)
+    public async Task<IActionResult> PostFile([FromForm]UploadFileRequest request, [FromRoute]long submissionId)
     {
-        if (file == null || file.Length == 0)
+        if (request.File == null || request.File.Length == 0)
         {
             return BadRequest("Empty file");
         }
-        var response = await _fileService.PostFile(file, user, submissionId);
+        var response = await _fileService.PostFile(request.File, request.User, submissionId);
         if (!response.IsSuccess)
         {
             return StatusCode(response.ErrorCode, response.Error);

@@ -6,6 +6,6 @@ public class UploadFilesConstants
 
     public static string UploadDirectory = "UploadedFiles";
 
-    public static string RequestPath = "UploadedFIles";
+    public static string RequestPath = "/UploadedFiles";
 
 }
