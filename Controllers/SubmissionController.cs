@@ -5,22 +5,19 @@ using TraineeManagementApi.DTO;
 using TraineeManagementApi.Services;
 using TraineeManagementApi.Constants;
 
+
 [Authorize]
 [ApiController]
 [Route("/api/[controller]")]
-public class SubmissionController : ControllerBase
+public class SubmissionsController : ControllerBase
 {
     private readonly SubmissionService _service;
-    
-    // private enum ValidStatus
-    // {
-    //     Submitted,
-    //     Resubmitted
-    // } 
+    private readonly SubmissionFileService _fileService;
 
-    public SubmissionController(SubmissionService service)
+    public SubmissionsController(SubmissionService service, SubmissionFileService fileService)
     {
         _service = service;
+        _fileService = fileService;
     }
     
     [HttpGet(Name = "GetAllSubmissions")]
@@ -80,6 +77,20 @@ public class SubmissionController : ControllerBase
         return Created();
     }
 
+    [HttpPost("{id:long}/files")]
+    public async Task<IActionResult> PostFile([FromForm]IFormFile file, string user, [FromRoute]long submissionId)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("Empty file");
+        }
+        var response = await _fileService.PostFile(file, user, submissionId);
+        if (!response.IsSuccess)
+        {
+            return StatusCode(response.ErrorCode, response.Error);
+        }
+        return StatusCode(201, response.Value);
+    }
 }
 
 

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.FileProviders;
+using TraineeManagementApi.Constants;
 // using FluentValidation;
 
 
@@ -63,6 +65,8 @@ builder.Services.AddScoped<TaskAssignmentRepository>();
 builder.Services.AddScoped<TaskAssignmentService>();
 builder.Services.AddScoped<SubmissionRepository>();
 builder.Services.AddScoped<SubmissionService>();
+builder.Services.AddScoped<SubmissionFileRepository>();
+builder.Services.AddScoped<SubmissionFileService>();
 builder.Services.AddScoped<ReviewRepository>();
 builder.Services.AddScoped<ReviewService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -71,6 +75,7 @@ builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<CreateTraineeRequestValidator>();
 builder.Services.AddScoped<UpdateTraineeRequestValidator>();
+builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddExceptionHandler<ExceptionHandlerService>();
@@ -139,6 +144,13 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, UploadFilesConstants.UploadDirectory)),
+    RequestPath = UploadFilesConstants.RequestPath
+});
 
 app.UseCors(MyAllowSpecificOrigins);
 

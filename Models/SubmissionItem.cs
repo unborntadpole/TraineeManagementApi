@@ -14,6 +14,7 @@ public class Submission
     // public long ReviewId { get; set; }
     // public Review? Review { get; set; }
 
+    public SubmissionFile? SubmissionFile { get; set; }
     public ICollection<Review> Reviews { get; }
 
 

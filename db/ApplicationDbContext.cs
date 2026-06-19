@@ -16,6 +16,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<TaskAssignment> TaskAssignments { get; set; }
     public DbSet<Submission> Submissions { get; set; }
+    public DbSet<SubmissionFile> SubmissionFiles { get; set; }
     public DbSet<Review> Reviews { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -47,6 +48,12 @@ public class ApplicationDbContext : DbContext
             .HasOne(e => e.TaskAssignment)
             .WithMany(e => e.Submissions)
             .HasForeignKey(e => e.TaskAssignmentId)
+            .IsRequired();
+
+        modelBuilder.Entity<SubmissionFile>()
+            .HasOne(e => e.Submission)
+            .WithOne(e => e.SubmissionFile)
+            .HasForeignKey<SubmissionFile>(e => e.SubmissionId)
             .IsRequired();
 
         // modelBuilder.Entity<Review>()
