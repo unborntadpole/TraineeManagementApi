@@ -36,10 +36,10 @@ bld/
 [Ll]ogs/
 
 # uploaded files:
-UploadedFiles
+UploadedFiles/*
 
 # temporary files
-temp
+temp/*
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
