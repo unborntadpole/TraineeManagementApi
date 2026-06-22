@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Http;
 
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Constants;
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Mvc;
 
 // SaveAsync, OpenReadAsync, ExistsAsync, and DeleteAsync 
 public interface IFileStorageService
@@ -30,10 +28,15 @@ public class LocalFileStorageService : IFileStorageService
 
     public async Task<Result<string>> SaveAsync(IFormFile file)
     {
-        if (file == null)
+        if (file == null || file.Length == 0)
         {
             _logger.LogWarning("Save file failed: File is empty");
             return Result<string>.ServerError("File cannot be empty", 400);
+        } 
+        else if (file.Length > UploadFilesConstants.MaxLength)
+        {
+            _logger.LogWarning("Save file failed: File is too big");
+            return Result<string>.ServerError("File too big. Max size is 20 MB", 413);
         }
         var contentPath = _environment.ContentRootPath;
         
@@ -48,8 +51,9 @@ public class LocalFileStorageService : IFileStorageService
         var ext = Path.GetExtension(file.FileName);
         if (!UploadFilesConstants.AllowedExtensions.Contains(ext))
         {
-            _logger.LogWarning("File save failed: FIle extension invalid");
-            throw new ArgumentException($"Only {string.Join(",", UploadFilesConstants.AllowedExtensions)} are allowed.");
+            _logger.LogWarning("File save failed: File extension invalid");
+            return Result<string>.ServerError($"File type not compatible. Only {string.Join(",", UploadFilesConstants.AllowedExtensions)} extensions are allowed.", 415);
+            // throw new ArgumentException($"Only {string.Join(",", UploadFilesConstants.AllowedExtensions)} are allowed.");
         }
 
         try

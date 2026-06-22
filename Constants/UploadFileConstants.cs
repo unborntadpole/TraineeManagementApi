@@ -8,4 +8,6 @@ public class UploadFilesConstants
 
     public static string RequestPath = "/UploadedFiles";
 
+    public static long MaxLength =  1 * 1024; // 20_971_520; // this is 20 mb
+
 }

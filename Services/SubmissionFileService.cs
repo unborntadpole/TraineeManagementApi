@@ -30,11 +30,11 @@ public class SubmissionFileService
 
     public async Task<Result<PostFileResponse>> PostFile(IFormFile file, string user, long submissionId)
     {
-        if (file == null || file.Length == 0)
-        {
-            _logger.LogWarning("Save file failed: File is empty");
-            return Result<PostFileResponse>.ServerError("File cannot be empty", 400);
-        }
+        // if (file == null || file.Length == 0)
+        // {
+        //     _logger.LogWarning("Save file failed: File is empty");
+        //     return Result<PostFileResponse>.ServerError("File cannot be empty", 400);
+        // }
         Result<string> result = await _fileStorageService.SaveAsync(file);
         if(result.IsSuccess)
         {
