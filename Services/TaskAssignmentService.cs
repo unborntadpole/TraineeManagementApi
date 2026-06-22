@@ -3,6 +3,7 @@ namespace TraineeManagementApi.Services;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Models;
 using TraineeManagementApi.db;
+using TraineeManagementApi.Constants;
 
 public class TaskAssignmentService
 {
@@ -38,7 +39,18 @@ public class TaskAssignmentService
     
     public async Task<Result<TaskAssignmentDTO>> GetById(long id)
     {
-        TaskAssignment taskAssg;
+        TaskAssignment? taskAssg;
+        try{
+            TaskAssignmentDTO? redisResponse = await RedisCacheHelper.GetObjectAsync<TaskAssignmentDTO>($"TaskAssignment:{id}", _logger);
+            if(redisResponse != null)
+            {
+                return Result<TaskAssignmentDTO>.SuccessWithCode(redisResponse, 200);
+            }
+        }
+        catch(Exception e)
+        {
+            _logger.LogWarning($"Redis get failed.\n{e}");
+        }
         try
         {
             taskAssg = await _repository.GetByIdAsync(id);
@@ -55,6 +67,15 @@ public class TaskAssignmentService
         }
         _logger.LogInformation("Task Assignment: Get By Id executed successfully");
         TaskAssignmentDTO taskAssignmentDTO = new TaskAssignmentDTO(taskAssg);
+        try
+        {
+            _logger.LogInformation("Trainee: Get with Id successful");
+            await RedisCacheHelper.SetObjectAsync<TaskAssignmentDTO>($"TaskAssignment:{id}", taskAssignmentDTO, TimeToLiveRedis.TaskAssignment, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Redis set failed");
+        }
         return Result<TaskAssignmentDTO>.Success(taskAssignmentDTO);
     }
 
@@ -70,6 +91,15 @@ public class TaskAssignmentService
         {
             _logger.LogWarning("Task Assignment: Post failed. Database problems");
             return Result<long>.ServerError("Post failed due to database problems",500);
+        }
+        try
+        {
+            TaskAssignmentDTO tDTO = new TaskAssignmentDTO(taskAssignment);
+            await RedisCacheHelper.SetObjectAsync<TaskAssignmentDTO>($"TaskAssignment:{tDTO.Id}", tDTO, TimeToLiveRedis.TaskAssignment, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Redis set failed");
         }
         _logger.LogInformation("Task Assignment: Post successful");
         return Result<long>.Success(200);
@@ -98,7 +128,7 @@ public class TaskAssignmentService
             _repository.Update(taskAssg);
             await _repository.SaveChangesAsync();
             _logger.LogInformation("Task Assignment: Put by Id successful");
-            return Result<long>.Success(200);
+
             
         }
         catch
@@ -106,6 +136,16 @@ public class TaskAssignmentService
             _logger.LogWarning("Task Assignment: Put by Id failed - database connection issue");
             return Result<long>.ServerError("Connection failed so did put operation", 500);
         }
+        try
+        {
+            TaskAssignmentDTO taskAssignmentDTO = new TaskAssignmentDTO(taskAssg);
+            await RedisCacheHelper.SetObjectAsync<TaskAssignmentDTO>($"TaskAssignment:{taskAssignmentDTO.Id}", taskAssignmentDTO, TimeToLiveRedis.TaskAssignment, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Failed to update in redis");
+        }
+        return Result<long>.Success(200);
     }
 
 
