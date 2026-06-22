@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations;
 public class SubmissionDTO
 {
 
-    [Required(ErrorMessage = "Id is required.")]
+    // [Required(ErrorMessage = "Id is required.")]
     public long Id { get; set; }
 
     [Required(ErrorMessage = "Task assignment Id is required.")]

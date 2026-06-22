@@ -51,7 +51,7 @@ public class SubmissionsController : ControllerBase
     }
         
     [HttpPost()]
-    public async Task<IActionResult> PostById(SubmissionDTO submissionDTO)
+    public async Task<IActionResult> Post(SubmissionDTO submissionDTO)
     {
         // var validator = _createRequestValidator.Validate(taskAssignmentDTO);
         // if (! validator.IsValid)
