@@ -8,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using TraineeManagementApi.Constants;
+// using Microsoft.Extensions.Caching.StackExchangeRedis;
 // using FluentValidation;
 
 
@@ -128,6 +129,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(
         connectionString
     ));
 
+// builder.Services.AddStackExchangeRedisCache(options =>
+// {
+//     options.Configuration = builder.Configuration.GetConnectionString("RedisConnection") 
+//                             ?? "localhost:6379";
+//     options.InstanceName = "TMapi_"; // Prefixes all keys in Redis
+// });
+
 
 var app = builder.Build();
 
@@ -143,7 +151,7 @@ if (app.Environment.IsDevelopment())
 
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseStaticFiles(new StaticFileOptions
 {

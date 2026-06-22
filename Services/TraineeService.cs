@@ -6,6 +6,8 @@ using TraineeManagementApi.Models;
 
 using TraineeManagementApi.db;
 
+using TraineeManagementApi.Constants;
+
 
 public class TraineeService : ITraineeService
 {
@@ -44,7 +46,18 @@ public class TraineeService : ITraineeService
 
     public async Task<Result<TraineeResponse>> GetById(long id)
     {
-        Trainee trainee;
+        Trainee? trainee;
+        try{
+            TraineeResponse? redisResponse = await RedisCacheHelper.GetObjectAsync<TraineeResponse>($"Trainee:{id}", _logger);
+            if(redisResponse != null)
+            {
+                return Result<TraineeResponse>.SuccessWithCode(redisResponse, 200);
+            }
+        }
+        catch(Exception e)
+        {
+            _logger.LogWarning($"Redis get failed.\n{e}");
+        }
         try
         {
             trainee = await _repository.GetByIdAsync(id);
@@ -61,7 +74,15 @@ public class TraineeService : ITraineeService
             return Result<TraineeResponse>.ServerError("Trainee not found.", 404);
         }
         TraineeResponse response = new TraineeResponse(trainee);
-        _logger.LogInformation("Trainee: Get with Id successful");
+        try
+        {
+            _logger.LogInformation("Trainee: Get with Id successful");
+            await RedisCacheHelper.SetObjectAsync<TraineeResponse>($"Trainee:{id}", response, TimeToLiveRedis.Trainee, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Redis set failed");
+        }
         // return Result<TraineeResponse>.Success(response);
         return Result<TraineeResponse>.SuccessWithCode(response, 200);
     }
@@ -73,14 +94,24 @@ public class TraineeService : ITraineeService
         {
             await _repository.AddAsync(trainee1);
             await _repository.SaveChangesAsync();
+            _logger.LogInformation("Trainee: Post successful");
+
         }
         catch
         {
             _logger.LogWarning("Trainee: Create request failed: Problems with database");
             return Result<string>.ServerError("Problems with database..", 500);
         }
-        _logger.LogInformation("Trainee: Post successful");
         // return Result<string>.Success("200");
+        try
+        {
+            TraineeResponse response = new TraineeResponse(trainee1);
+            await RedisCacheHelper.SetObjectAsync<TraineeResponse>($"Trainee:{response.Id}", response, TimeToLiveRedis.Trainee, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Redis set failed");
+        }
         return Result<string>.SuccessWithCode("Post Successful", 201);
     }
 
@@ -114,7 +145,6 @@ public class TraineeService : ITraineeService
             await _repository.SaveChangesAsync();
             _logger.LogInformation("Trainee: Put by Id successful");
             // return Result<string>.Success(200);
-            return Result<string>.SuccessWithCode($"Put successful for trainee with id: {trainee.Id}", 201);
             
         }
         catch
@@ -122,6 +152,16 @@ public class TraineeService : ITraineeService
             _logger.LogWarning("Trainee: Failed to update data");
             return Result<string>.ServerError("Database error..", 500);
         }
+        try
+        {
+            TraineeResponse response = new TraineeResponse(old_trainee);
+            await RedisCacheHelper.SetObjectAsync<TraineeResponse>($"Trainee:{response.Id}", response, TimeToLiveRedis.Trainee, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Failed to update in redis");
+        }
+        return Result<string>.SuccessWithCode($"Put successful for trainee with id: {trainee.Id}", 201);
     }
 
 
@@ -155,6 +195,15 @@ public class TraineeService : ITraineeService
             return Result<string>.ServerError("Failed to delete in the database", 500);
         }
         _logger.LogInformation("Trainee: Delete by Id successful");
+        try
+        {
+            if (await RedisCacheHelper.GetObjectAsync<TraineeResponse>($"Trainee:{id}", _logger) != null)
+                await RedisCacheHelper.KeyDelete($"Trainee:{id}", _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Failed to delete in redis");
+        }
         // return Result<string>.Success(200);
         return Result<string>.SuccessWithCode($"Trainee with id {id} deleted", 204);
     }
