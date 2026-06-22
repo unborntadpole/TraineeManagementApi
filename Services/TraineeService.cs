@@ -117,7 +117,7 @@ public class TraineeService : ITraineeService
 
     public async Task<Result<string>> PutById(TraineeRequest trainee)
     {
-        Trainee old_trainee;
+        Trainee? old_trainee;
         try
         {
             old_trainee = await _repository.GetByIdAsync(trainee.Id);
@@ -167,7 +167,7 @@ public class TraineeService : ITraineeService
 
     public async Task<Result<string>> DeleteById(long id)
     {
-        Trainee trainee;
+        Trainee? trainee;
         try
         {
             trainee = await _repository.GetByIdAsync(id);

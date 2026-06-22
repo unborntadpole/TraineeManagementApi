@@ -69,7 +69,6 @@ public class TaskAssignmentService
         TaskAssignmentDTO taskAssignmentDTO = new TaskAssignmentDTO(taskAssg);
         try
         {
-            _logger.LogInformation("Trainee: Get with Id successful");
             await RedisCacheHelper.SetObjectAsync<TaskAssignmentDTO>($"TaskAssignment:{id}", taskAssignmentDTO, TimeToLiveRedis.TaskAssignment, _logger);
         }
         catch
@@ -107,7 +106,7 @@ public class TaskAssignmentService
 
     public async Task<Result<long>> PutById(string status, long id)
     {
-        TaskAssignment taskAssg;
+        TaskAssignment? taskAssg;
         try
         {
             taskAssg = await _repository.GetByIdAsync(id);
@@ -125,7 +124,7 @@ public class TaskAssignmentService
         try
         {
             taskAssg.Status = status;
-            _repository.Update(taskAssg);
+            await _repository.Update(taskAssg);
             await _repository.SaveChangesAsync();
             _logger.LogInformation("Task Assignment: Put by Id successful");
 

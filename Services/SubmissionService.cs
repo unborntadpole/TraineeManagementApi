@@ -3,6 +3,7 @@ namespace TraineeManagementApi.Services;
 using TraineeManagementApi.DTO;
 using TraineeManagementApi.Models;
 using TraineeManagementApi.db;
+using TraineeManagementApi.Constants;
 
 public class SubmissionService
 {
@@ -38,7 +39,18 @@ public class SubmissionService
     
     public async Task<Result<SubmissionDTO>> GetById(long id)
     {
-        Submission submission;
+        Submission? submission;
+        try{
+            SubmissionDTO? redisResponse = await RedisCacheHelper.GetObjectAsync<SubmissionDTO>($"Submission:{id}", _logger);
+            if(redisResponse != null)
+            {
+                return Result<SubmissionDTO>.SuccessWithCode(redisResponse, 200);
+            }
+        }
+        catch(Exception e)
+        {
+            _logger.LogWarning($"Redis get failed.\n{e}");
+        }
         try
         {
             submission = await _repository.GetByIdAsync(id);
@@ -55,6 +67,14 @@ public class SubmissionService
         }
         _logger.LogInformation("Submission: Get By Id executed successfully");
         SubmissionDTO submissionDTO = new SubmissionDTO(submission);
+        try
+        {
+            await RedisCacheHelper.SetObjectAsync<SubmissionDTO>($"Submission:{id}", submissionDTO, TimeToLiveRedis.Submission, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Redis set failed");
+        }
         return Result<SubmissionDTO>.Success(submissionDTO);
     }
 
@@ -70,6 +90,15 @@ public class SubmissionService
         {
             _logger.LogWarning("Submission: Post failed. Database problems");
             return Result<long>.ServerError("Post failed due to database problems",500);
+        }
+        try
+        {
+            SubmissionDTO submissionDTO1 = new SubmissionDTO(submission);
+            await RedisCacheHelper.SetObjectAsync<SubmissionDTO>($"Submission:{submissionDTO1.Id}", submissionDTO1, TimeToLiveRedis.Submission, _logger);
+        }
+        catch
+        {
+            _logger.LogWarning("Redis set failed");
         }
         _logger.LogInformation("Submission: Post successful");
         return Result<long>.Success(200);
