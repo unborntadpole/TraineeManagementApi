@@ -36,7 +36,7 @@ public class LocalFileStorageService : IFileStorageService
         else if (file.Length > UploadFilesConstants.MaxLength)
         {
             _logger.LogWarning("Save file failed: File is too big");
-            return Result<string>.ServerError("File too big. Max size is 20 MB", 413);
+            return Result<string>.ServerError($"File too big. Max size is {UploadFilesConstants.MaxLength} bytes", 413);
         }
         var contentPath = _environment.ContentRootPath;
         
