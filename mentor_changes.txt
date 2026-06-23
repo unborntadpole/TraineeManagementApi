@@ -1,0 +1,48 @@
+Error handling feedback arrangement 	[done]
+Replacing string -> Enum		[done]
+Server side error codes			[done]
+Put vs patch
+Custom email validation 		[done]
+
+
+services that use fluent validation how do they handle frontend	[done]
+simplify trainee request dto and validation classes into one	[done]
+simplify the result object to return 2 fields			[done]
+data annotation custom email validation				[done]
+
+
+data validation for relational data like Foreign keys		[]
+
+foreign key remove from parent 					[done]
+sql increment logic what it does when id already there - 	[it continues after the last one when a custom id is added]
+ef core and sql							[done]
+one to many for reviews and submissions				[done]
+exeption handler class						[done]
+must not empty sequence in validator -				[both run together. can directly remove not empty]
+swagger change name from apikey to jwt token in pop up		[done]
+
+
+
+use pipe reader to read files
+see how environment variables are handled
+change file upload and request paths so they are different
+add validation to submissionfileDTO
+file.ContentType is not a safe check. it only checks the file extension
+check whether Id is updated on AddAsync (savechanges) in the service class 	[okay i looked it up it does]
+uploading an exe file prevents upload in the first place. why
+
+
+submission id validation on post?
+submission id return on post
+validation of url in submission
+resubmission status validation - check based on taskassignment id or trainee id - implement in submission service
+uploaded by user name use user id, extract it from jwt
+check empty file upload validation
+
+
+
+git branch <name>: Creates a new branch at your current commit.
+git switch <name>: Switches your workspace to the specified branch.
+git switch -c <name>: Creates a new branch and immediately switches to it.
+git branch: Lists all local branches in your repository.
+git branch -d <name>: Deletes a branch
