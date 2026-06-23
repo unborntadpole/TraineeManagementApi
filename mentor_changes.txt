@@ -7,18 +7,18 @@ Custom email validation 		[done]
 
 services that use fluent validation how do they handle frontend	[done]
 simplify trainee request dto and validation classes into one	[done]
-simplify the result object to return 2 fields			[done]
-data annotation custom email validation				[done]
+simplify the result object to return 2 fields			        [done]
+data annotation custom email validation				            [done]
 
 
 data validation for relational data like Foreign keys		[]
 
-foreign key remove from parent 					[done]
+foreign key remove from parent 					            [done]
 sql increment logic what it does when id already there - 	[it continues after the last one when a custom id is added]
-ef core and sql							[done]
-one to many for reviews and submissions				[done]
-exeption handler class						[done]
-must not empty sequence in validator -				[both run together. can directly remove not empty]
+ef core and sql							                    [done]
+one to many for reviews and submissions				        [done]
+exeption handler class						                [done]
+must not empty sequence in validator -				        [both run together. can directly remove not empty]
 swagger change name from apikey to jwt token in pop up		[done]
 
 

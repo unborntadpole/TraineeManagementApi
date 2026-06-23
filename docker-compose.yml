@@ -4,9 +4,9 @@ services:
     container_name: redis_container
     restart: always
     ports:
-      - "6379:6379"
+      - "${REDIS_PORTS}"
     command: >
-      sh -c "redis-server --requirepass helloworld --user samriddh on >samriddh ~* +@all"
+      sh -c "redis-server --requirepass ${REDIS_ROOT_PASSWORD} --user ${REDIS_USER} on >${REDIS_USER_PASSWORD} ~* +@all"
     volumes:
       - redis_data:/data
 
@@ -15,17 +15,100 @@ services:
     container_name: mysql-container
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: mysql
-      MYSQL_DATABASE: trainee_management_db
-      MYSQL_USER: samriddh
-      MYSQL_PASSWORD: mysql
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3306:3306"
+      - "${MYSQL_PORTS}"
     volumes:
       - mysql_data:/var/lib/mysql
 
+  rabbitmq:
+    image: docker-registry-002.zeuslearning.com/zeuslearning/rabbitmq
+    container_name: rabbitmq
+    hostname: rabbitmq-server
+    restart: unless-stopped
+    ports:
+      - "${RABBITMQ_APP_PORT_DEFAULT}:${RABBITMQ_APP_PORT_VIRTUAL}" 
+      - "${RABBITMQ_WEBPAGE_PORT}"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
 volumes:
   mysql_data:
   redis_data:
     driver: local
+  rabbitmq_data:
+    driver: local
+
+# .env file:
+
+# ASPNETCORE_TEMP = "/temp"
+
+# MYSQL_ROOT_PASSWORD = "mysql"
+# MYSQL_DATABASE = "trainee_management_db"
+# MYSQL_USER = "samriddh"
+# MYSQL_PASSWORD = "mysql"
+# MYSQL_PORTS = "3306:3306"
+
+# REDIS_ROOT_PASSWORD = "helloworld"
+# REDIS_USER = "samriddh"
+# REDIS_USER_PASSWORD = "samriddh"
+# REDIS_PORTS = "6379:6379"
+
+# RABBITMQ_APP_PORT = "5672:5672" 
+# RABBITMQ_WEBPAGE_PORT = "15672:15672"
+# RABBITMQ_DEFAULT_USER = "samriddh"
+# RABBITMQ_DEFAULT_PASS = "samriddh"
+
+
+# services:
+#   redis:
+#     image: docker-registry-002.zeuslearning.com/zeuslearning/redis
+#     container_name: redis_container
+#     restart: always
+#     ports:
+#       - "6379:6379"
+#     command: >
+#       sh -c "redis-server --requirepass helloworld --user samriddh on >samriddh ~* +@all"
+#     volumes:
+#       - redis_data:/data
+
+#   mysql-db:
+#     image: docker-registry-002.zeuslearning.com/zeuslearning/mysql
+#     container_name: mysql-container
+#     restart: always
+#     environment:
+#       MYSQL_ROOT_PASSWORD: mysql
+#       MYSQL_DATABASE: trainee_management_db
+#       MYSQL_USER: samriddh
+#       MYSQL_PASSWORD: mysql
+#     ports:
+#       - "3306:3306"
+#     volumes:
+#       - mysql_data:/var/lib/mysql
+
+#   rabbitmq:
+#     image: docker-registry-002.zeuslearning.com/zeuslearning/rabbitmq
+#     container_name: rabbitmq
+#     hostname: rabbitmq-server
+#     restart: unless-stopped
+#     ports:
+#       - "5672:5672" 
+#       - "15672:15672"
+#     environment:
+#       RABBITMQ_DEFAULT_USER: samriddh
+#       RABBITMQ_DEFAULT_PASS: samriddh
+#     volumes:
+#       - rabbitmq_data:/var/lib/rabbitmq
+
+# volumes:
+#   mysql_data:
+#   redis_data:
+#     driver: local
+#   rabbitmq_data:
+#     driver: local
