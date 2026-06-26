@@ -31,4 +31,12 @@ public class StatusEnums
         Completed
     }
 
+    public enum ProcessingJobStatus
+    {
+        Queued,
+        Processing,
+        Completed,
+        Failed
+    }
+
 }

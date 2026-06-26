@@ -70,6 +70,7 @@ builder.Services.AddScoped<SubmissionFileRepository>();
 builder.Services.AddScoped<SubmissionFileService>();
 builder.Services.AddScoped<ReviewRepository>();
 builder.Services.AddScoped<ReviewService>();
+builder.Services.AddScoped<ProcessingJobsRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPasswordHasher<string>, PasswordHasher<string>>();
 builder.Services.AddScoped<IPasswordHelper, PasswordHelper>();

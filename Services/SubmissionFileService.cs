@@ -13,12 +13,21 @@ public class SubmissionFileService
     private readonly RabbitMQProducer _producer;
     private readonly IFileStorageService _fileStorageService;
 
-    public SubmissionFileService(SubmissionFileRepository repository, ILogger<SubmissionFileService> logger, RabbitMQProducer producer, IFileStorageService fileStorageService)
+    private readonly ProcessingJobsRepository _jobRepo;
+
+    public SubmissionFileService(
+        SubmissionFileRepository repository, 
+        ILogger<SubmissionFileService> logger, 
+        RabbitMQProducer producer, 
+        IFileStorageService fileStorageService,
+        ProcessingJobsRepository jobRepo
+    )
     {
         _repository = repository;
         _logger = logger;
         _producer = producer;
         _fileStorageService = fileStorageService;
+        _jobRepo = jobRepo;
     }
 
     public async Task<string> GetChecksum(IFormFile file)
@@ -72,13 +81,21 @@ public class SubmissionFileService
                 _logger.LogInformation(
                     "Published message successfully. MessageId: {MsgId}, CorrelationId: {CorrId}, SubmissionId: {SubId}",
                     payload.MessageId, payload.CorrelationId, payload.SubmissionId);
-                return Result<PostFileResponse>.SuccessWithCode( response, 202);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Broker down. Failed to queue message with correlationId: {payload.CorrelationId}");
                 return Result<PostFileResponse>.ServerError("Persistence succeeded but worker queue unavailable. Please retry later.", 500);
             }
+            try
+            {
+                await _jobRepo.PostByIdAsync(payload.CorrelationId.ToString());
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"Failed to save the ProcessingJob info in database:\n{e.Message} \nWarning: Job has been queued");
+            }
+            return Result<PostFileResponse>.SuccessWithCode( response, 202);
         }
         else return Result<PostFileResponse>.ServerError(result.Error, result.ErrorCode);
     }
