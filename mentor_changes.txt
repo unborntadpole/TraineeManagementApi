@@ -45,6 +45,10 @@ You should not commit the secrets to your github repo like jwt key, database con
 [Priority] Please update the README.md file as per the current status of the project, once you join
 
 
+look into different cache policies - how read and write will work in different cache policies, and cahce levels and how they are useful and how they are used in web apps
+utc time stamp vs date time offset
+put does not need get unless condition check needed; how caching would work for patch operations. best strats
+mysql direct use more
 
 git branch <name>: Creates a new branch at your current commit.
 git switch <name>: Switches your workspace to the specified branch.
