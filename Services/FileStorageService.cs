@@ -76,7 +76,7 @@ public class LocalFileStorageService : IFileStorageService
     {
         try
         {
-            var path = Path.Combine(_environment.ContentRootPath, UploadFilesConstants.UploadDirectory);
+            var path = Path.Combine(_environment.ContentRootPath, UploadFilesConstants.RequestPath);
             path = Path.Combine(path, fileName);
             if (!File.Exists(path))
             {
@@ -102,7 +102,7 @@ public class LocalFileStorageService : IFileStorageService
     public async Task<Result<string>> DeleteAsync( string fileName)
     {        try
         {
-            var path = Path.Combine(_environment.ContentRootPath, UploadFilesConstants.UploadDirectory);
+            var path = Path.Combine(_environment.ContentRootPath, UploadFilesConstants.RequestPath);
             path = Path.Combine(path, fileName);
             if (!File.Exists(path))
             {

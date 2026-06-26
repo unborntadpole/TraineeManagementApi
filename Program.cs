@@ -9,12 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using TraineeManagementApi.Constants;
 using RabbitMQ.Client;
-using System.ComponentModel;
 
-
-
-// using Microsoft.Extensions.Caching.StackExchangeRedis;
-// using FluentValidation;
 
 
 
@@ -85,26 +80,39 @@ builder.Services.AddScoped<IFileStorageService, LocalFileStorageService>();
 builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
 
 builder.Services.AddExceptionHandler<ExceptionHandlerService>();
-try
+// try
+// {
+//     var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
+//     var factory = new ConnectionFactory
+//     {
+//         Uri = new Uri(rabbitMQSettings["Uri"])
+//     };
+//     IConnection connection = await factory.CreateConnectionAsync();
+//     builder.Services.AddSingleton<IConnection>(connection);
+//     // builder.Services.AddSingleton(sp => new ConnectionFactory
+//     // {
+//     //     Uri = new Uri(rabbitMQSettings["Uri"]),
+//     //     AutomaticRecoveryEnabled = true, // Automatically reconnects if network drops
+//     //     TopologyRecoveryEnabled = true   // Re-declares queues/exchanges upon reconnection
+//     // });
+// }
+// catch(Exception e)
+// {
+//     Console.WriteLine($"RabbitMQ connection failed: {e.Message}");
+// }
+
+var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
+var uriString = rabbitMQSettings["Uri"] ?? throw new InvalidOperationException("RabbitMQ URI is missing.");
+builder.Services.AddSingleton<IConnection>(serviceProvider =>
 {
-    var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
     var factory = new ConnectionFactory
     {
-        Uri = new Uri(rabbitMQSettings["Uri"])
+        Uri = new Uri(uriString)
     };
-    IConnection connection = await factory.CreateConnectionAsync();
-    builder.Services.AddSingleton<IConnection>(connection);
-    // builder.Services.AddSingleton(sp => new ConnectionFactory
-    // {
-    //     Uri = new Uri(rabbitMQSettings["Uri"]),
-    //     AutomaticRecoveryEnabled = true, // Automatically reconnects if network drops
-    //     TopologyRecoveryEnabled = true   // Re-declares queues/exchanges upon reconnection
-    // });
-}
-catch(Exception e)
-{
-    Console.WriteLine($"RabbitMQ connection failed: {e.Message}");
-}
+    return factory.CreateConnectionAsync().GetAwaiter().GetResult();
+}); // this seems like the better way to do it
+
+builder.Services.AddSingleton<RabbitMQProducer>();
 
 var jwtSettings = builder.Configuration.GetSection("JwtConfig");
 var secretKey = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
@@ -178,12 +186,12 @@ if (app.Environment.IsDevelopment())
 
 // app.UseHttpsRedirection();
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(
-           Path.Combine(builder.Environment.ContentRootPath, UploadFilesConstants.UploadDirectory)),
-    RequestPath = UploadFilesConstants.RequestPath
-});
+// app.UseStaticFiles(new StaticFileOptions
+// {
+//     FileProvider = new PhysicalFileProvider(
+//            Path.Combine(builder.Environment.ContentRootPath, UploadFilesConstants.UploadDirectory))//,
+//     // RequestPath = UploadFilesConstants.RequestPath
+// });
 
 app.UseCors(MyAllowSpecificOrigins);
 

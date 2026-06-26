@@ -51,6 +51,7 @@ public class PostFileResponse
     public string ContentType { get; set; }
     public string Checksum { get; set; }
     public string UploadedByUser { get; set; }
+    public string TrackingId { get; set; }
     public DateTime UploadedDate { get; set; }
     public PostFileResponse( SubmissionFile submissionFile)
     {

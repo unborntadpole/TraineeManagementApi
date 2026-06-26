@@ -10,13 +10,6 @@ public class RedisCacheHelper
         Password = "helloworld"
     };
     private static ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(conf);
-    // Source - https://stackoverflow.com/a/27138710
-// Posted by pranav rastogi, modified by community. See post 'Timeline' for change history
-// Retrieved 2026-06-22, License - CC BY-SA 4.0
-
-    // private static ConnectionMultiplexer redis = 
-    //     ConnectionMultiplexer.Connect("http://localhost:6379,password=helloworld");//,ConnectTimeout=10000");
-   
 
     private static IDatabase db = redis.GetDatabase();
     public static async Task SetObjectAsync<T>(string key, T value, double expiryInMinutes, ILogger logger)

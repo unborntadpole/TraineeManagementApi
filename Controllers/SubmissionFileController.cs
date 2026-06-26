@@ -35,7 +35,7 @@ public class SubmissionFileController: ControllerBase
         {
             return StatusCode(res.ErrorCode, res.Error);
         } 
-        return StatusCode(204,res.Value);
+        return StatusCode(204);
     }
 }
 

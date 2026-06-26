@@ -4,18 +4,20 @@ using TraineeManagementApi.db;
 using TraineeManagementApi.DTO;
 using System.Security.Cryptography;
 using TraineeManagementApi.Models;
+using TraineeManagementApi.Constants;
 
 public class SubmissionFileService
 {
     private readonly ILogger<SubmissionFileService> _logger;
     private readonly SubmissionFileRepository _repository;
-
+    private readonly RabbitMQProducer _producer;
     private readonly IFileStorageService _fileStorageService;
 
-    public SubmissionFileService(SubmissionFileRepository repository, ILogger<SubmissionFileService> logger, IFileStorageService fileStorageService)
+    public SubmissionFileService(SubmissionFileRepository repository, ILogger<SubmissionFileService> logger, RabbitMQProducer producer, IFileStorageService fileStorageService)
     {
         _repository = repository;
         _logger = logger;
+        _producer = producer;
         _fileStorageService = fileStorageService;
     }
 
@@ -36,6 +38,7 @@ public class SubmissionFileService
         //     return Result<PostFileResponse>.ServerError("File cannot be empty", 400);
         // }
         Result<string> result = await _fileStorageService.SaveAsync(file);
+        _logger.LogInformation($"File stored with name {result.Value}.");
         if(result.IsSuccess)
         {
             string checksum = await GetChecksum(file);
@@ -51,8 +54,31 @@ public class SubmissionFileService
                 SubmissionId = submissionId
             };
             await _repository.AddAsync(saveFile);
+            _logger.LogInformation($"File metadate saved with id {saveFile.Id}");
             PostFileResponse response = new PostFileResponse(saveFile);
-            return Result<PostFileResponse>.Success(response);
+            SubmissionProcessingRequested payload = new SubmissionProcessingRequested(
+                MessageId: Guid.NewGuid(),
+                CorrelationId: Guid.NewGuid(),
+                SubmissionId: submissionId,
+                FileId: saveFile.Id,
+                RequestedAt: DateTimeOffset.UtcNow,
+                ContractVersion: UploadFilesConstants.SubmissionProcessingRequestedVersion.ToString()
+            );
+            response.TrackingId = payload.CorrelationId.ToString();
+            try
+            {
+                await _producer.PublishAsync("submission.exchange", "submission.requested", payload);
+
+                _logger.LogInformation(
+                    "Published message successfully. MessageId: {MsgId}, CorrelationId: {CorrId}, SubmissionId: {SubId}",
+                    payload.MessageId, payload.CorrelationId, payload.SubmissionId);
+                return Result<PostFileResponse>.SuccessWithCode( response, 202);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Broker down. Failed to queue message with correlationId: {payload.CorrelationId}");
+                return Result<PostFileResponse>.ServerError("Persistence succeeded but worker queue unavailable. Please retry later.", 500);
+            }
         }
         else return Result<PostFileResponse>.ServerError(result.Error, result.ErrorCode);
     }

@@ -31,6 +31,8 @@ file.ContentType is not a safe check. it only checks the file extension
 check whether Id is updated on AddAsync (savechanges) in the service class 	[okay i looked it up it does]
 uploading an exe file prevents upload in the first place. why
 
+handle exeption when file is stored but metadata is not stored.
+
 
 submission id validation on post?
 submission id return on post
@@ -38,6 +40,9 @@ validation of url in submission
 resubmission status validation - check based on taskassignment id or trainee id - implement in submission service
 uploaded by user name use user id, extract it from jwt
 check empty file upload validation
+
+You should not commit the secrets to your github repo like jwt key, database connection string, redis configs, etc. Since anyone that has access to your repo gets all the secrets and can access your resources. Also if any malicious script is pushed to your repo, then it can read your code and and also read the credentials pushed to your repo.
+[Priority] Please update the README.md file as per the current status of the project, once you join
 
 
 
