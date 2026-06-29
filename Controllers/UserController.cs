@@ -35,6 +35,29 @@ public class LoginController : ControllerBase
         return Ok(response.Value);
     }
 
+    [HttpPost("/admin")]
+    public async Task<IActionResult> Login()
+    {
+        LoginRequest request = new LoginRequest()
+        {
+            Username = "admin",
+            Password = "Admin@123"
+        };
+        var response = await _authService.Login(request);
+        if (!response.IsSuccess)
+        {
+            switch (response.Error)
+            {
+                case "User not found":
+                return NotFound();
+                case "Incorrect password":
+                return Unauthorized();
+            }
+        }
+        
+        return Ok(response.Value);
+    }
+
 }
 
 

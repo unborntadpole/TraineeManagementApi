@@ -1,3 +1,4 @@
+using System.Data;
 using TraineeManagementApi.Models;
 
 namespace TraineeManagementApi.db;
@@ -42,6 +43,10 @@ public class ProcessingJobsRepository
             return false;
         }
         job.Status = status;
+        if (status == "Completed")
+        {
+            job.Finished = DateTime.UtcNow;
+        }
         await _context.SaveChangesAsync();
         return true;
     }

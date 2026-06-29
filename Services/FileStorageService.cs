@@ -1,7 +1,7 @@
 namespace TraineeManagementApi.Services;
 
 using System.IO;
-using Microsoft.AspNetCore.Hosting;
+// using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
 using TraineeManagementApi.DTO;
@@ -19,8 +19,8 @@ public interface IFileStorageService
 public class LocalFileStorageService : IFileStorageService
 {
     private readonly ILogger<LocalFileStorageService> _logger;
-    private readonly IWebHostEnvironment _environment;
-    public LocalFileStorageService(IWebHostEnvironment environment, ILogger<LocalFileStorageService> logger)
+    private readonly IHostEnvironment _environment;
+    public LocalFileStorageService(IHostEnvironment environment, ILogger<LocalFileStorageService> logger)
     {
         _environment = environment;
         _logger = logger;

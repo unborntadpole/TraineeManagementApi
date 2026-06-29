@@ -11,21 +11,36 @@ public class RabbitMQProducer
         _connection = connection;   
     }
 
-    public async Task PublishAsync<T>(string exchange, string routingKey, T message) where T : class
+    public async Task PublishAsync<T>(string exchangeAndRoutingKey, string queue, T message) where T : class
     {
         using var channel = await _connection.CreateChannelAsync();
 
-        await channel.ExchangeDeclareAsync(exchange: exchange, type: ExchangeType.Topic, durable: true);
+        string dlxName = $"{exchangeAndRoutingKey}.dlx";
+        string dlqName = $"{queue}-dead-letter";
+        string deadLetterRoutingKey = $"{exchangeAndRoutingKey}.failed";
 
+        string routingKey = "${exchangeAndRoutingKey}.requested";
+        string exchange = "${exchangeAndRoutingKey}.exchange";
+
+        await channel.ExchangeDeclareAsync(exchange: dlxName, type: ExchangeType.Direct, durable: true);
+        await channel.QueueDeclareAsync(queue: dlqName, durable: true, exclusive: false, autoDelete: false);
+        await channel.QueueBindAsync(queue: dlqName, exchange: dlxName, routingKey: deadLetterRoutingKey);
+
+        await channel.ExchangeDeclareAsync(exchange: $"{exchangeAndRoutingKey}.exchange", type: ExchangeType.Topic, durable: true);
+        var queueArguments = new Dictionary<string, object?>
+        {
+            { "x-dead-letter-exchange", dlxName },
+            { "x-dead-letter-routing-key", deadLetterRoutingKey }
+        };
         await channel.QueueDeclareAsync(
-            queue: "submission-processing", 
+            queue: queue, 
             durable: true,
             exclusive: false, 
             autoDelete: false, 
             arguments: null);
 
         await channel.QueueBindAsync(
-            queue: "submission-processing", 
+            queue: queue, 
             exchange: exchange, 
             routingKey: routingKey);
 

@@ -14,6 +14,8 @@ public class SubmissionFileService
     private readonly IFileStorageService _fileStorageService;
 
     private readonly ProcessingJobsRepository _jobRepo;
+    private readonly string _queueName = QueueConstants.SubmissionQueueName;
+    private readonly string exchangeAndRoutingKey = QueueConstants.SubmissionExchangeAndRoutingKey;
 
     public SubmissionFileService(
         SubmissionFileRepository repository, 
@@ -36,7 +38,7 @@ public class SubmissionFileService
         using var sha256 = SHA256.Create();
         byte[] hashBytes = await sha256.ComputeHashAsync(stream);
         string calculatedChecksum = BitConverter.ToString(hashBytes).Replace("-", "").ToLowerInvariant();
-        return calculatedChecksum;        
+        return calculatedChecksum;
     }
 
     public async Task<Result<PostFileResponse>> PostFile(IFormFile file, string user, long submissionId)
@@ -76,7 +78,7 @@ public class SubmissionFileService
             response.TrackingId = payload.CorrelationId.ToString();
             try
             {
-                await _producer.PublishAsync("submission.exchange", "submission.requested", payload);
+                await _producer.PublishAsync(exchangeAndRoutingKey, _queueName ,payload);
 
                 _logger.LogInformation(
                     "Published message successfully. MessageId: {MsgId}, CorrelationId: {CorrId}, SubmissionId: {SubId}",
