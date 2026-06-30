@@ -19,8 +19,8 @@ public class RabbitMQProducer
         string dlqName = $"{queue}-dead-letter";
         string deadLetterRoutingKey = $"{exchangeAndRoutingKey}.failed";
 
-        string routingKey = "${exchangeAndRoutingKey}.requested";
-        string exchange = "${exchangeAndRoutingKey}.exchange";
+        string routingKey = $"{exchangeAndRoutingKey}.requested";
+        string exchange = $"{exchangeAndRoutingKey}.exchange";
 
         await channel.ExchangeDeclareAsync(exchange: dlxName, type: ExchangeType.Direct, durable: true);
         await channel.QueueDeclareAsync(queue: dlqName, durable: true, exclusive: false, autoDelete: false);
