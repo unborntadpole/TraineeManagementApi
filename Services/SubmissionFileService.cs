@@ -64,8 +64,16 @@ public class SubmissionFileService
                 UploadedDate = DateTime.UtcNow,
                 SubmissionId = submissionId
             };
-            await _repository.AddAsync(saveFile);
-            _logger.LogInformation($"File metadate saved with id {saveFile.Id}");
+            try
+            {
+                await _repository.AddAsync(saveFile);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Failed to save metadata:\n{ex}");
+                return Result<PostFileResponse>.ServerError("Failed to save file..",500);
+            }
+            _logger.LogInformation($"File metadata saved with id {saveFile.Id}");
             PostFileResponse response = new PostFileResponse(saveFile);
             SubmissionProcessingRequested payload = new SubmissionProcessingRequested(
                 MessageId: Guid.NewGuid(),

@@ -1,5 +1,4 @@
 namespace TraineeManagementApi.DTO;
-using TraineeManagementApi.Constants;
 
 public record SubmissionProcessingRequested(
     Guid MessageId,

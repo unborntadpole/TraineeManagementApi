@@ -5,7 +5,7 @@ using System.Text.Json;
 public class RedisCacheHelper
 {
     private static readonly ConfigurationOptions conf = new ConfigurationOptions {
-        EndPoints = { "localhost:6379" },
+        EndPoints = { "redis:6379" },
         // User = "samriddh",
         Password = "helloworld"
     };

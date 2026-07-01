@@ -50,6 +50,12 @@ utc time stamp vs date time offset
 put does not need get unless condition check needed; how caching would work for patch operations. best strats
 mysql direct use more
 
+where to use try catch - repo or service on db call. (use error code or database call for validation? and how to present it to user)
+redis - delete whole cache endpoint; also shift put and delete redis functions before db call and fail db operation when redis call is failed
+solid principles
+
+
+
 git branch <name>: Creates a new branch at your current commit.
 git switch <name>: Switches your workspace to the specified branch.
 git switch -c <name>: Creates a new branch and immediately switches to it.

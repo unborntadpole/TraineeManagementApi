@@ -36,24 +36,23 @@ public class LocalFileStorageService : IFileStorageService
         else if (file.Length > UploadFilesConstants.MaxLength)
         {
             _logger.LogWarning("Save file failed: File is too big");
-            return Result<string>.ServerError($"File too big. Max size is {UploadFilesConstants.MaxLength} bytes", 413);
+            return Result<string>.ServerError($"File too big. Max size is {UploadFilesConstants.MaxLength/1024/1024} megabytes", 413);
         }
-        var contentPath = _environment.ContentRootPath;
         
-        var path = Path.Combine(contentPath, UploadFilesConstants.UploadDirectory);
-
-        if (!Directory.Exists(path))
-        {
-            _logger.LogInformation("File save: Created a direcetory for file upload");
-            Directory.CreateDirectory(path);
-        }
-
         var ext = Path.GetExtension(file.FileName);
         if (!UploadFilesConstants.AllowedExtensions.Contains(ext))
         {
             _logger.LogWarning("File save failed: File extension invalid");
             return Result<string>.ServerError($"File type not compatible. Only {string.Join(",", UploadFilesConstants.AllowedExtensions)} extensions are allowed.", 415);
             // throw new ArgumentException($"Only {string.Join(",", UploadFilesConstants.AllowedExtensions)} are allowed.");
+        }        
+
+        var path = Path.Combine(_environment.ContentRootPath, UploadFilesConstants.UploadDirectory);
+
+        if (!Directory.Exists(path))
+        {
+            _logger.LogInformation("File save: Created a direcetory for file upload");
+            Directory.CreateDirectory(path);
         }
 
         try

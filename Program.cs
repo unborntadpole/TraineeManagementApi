@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.FileProviders;
-using TraineeManagementApi.Constants;
 using RabbitMQ.Client;
 
 
@@ -102,8 +100,10 @@ builder.Services.AddExceptionHandler<ExceptionHandlerService>();
 //     Console.WriteLine($"RabbitMQ connection failed: {e.Message}");
 // }
 
-var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
-var uriString = rabbitMQSettings["Uri"] ?? throw new InvalidOperationException("RabbitMQ URI is missing.");
+// var rabbitMQSettings = builder.Configuration.GetSection("RabbitMQ");
+var rabbitMQSettings = builder.Configuration.GetConnectionString("RabbitMqURI");
+// var uriString = rabbitMQSettings["Uri"] ?? throw new InvalidOperationException("RabbitMQ URI is missing.");
+var uriString = rabbitMQSettings ?? throw new InvalidOperationException("RabbitMQ URI is missing.");
 builder.Services.AddSingleton<IConnection>(serviceProvider =>
 {
     var factory = new ConnectionFactory

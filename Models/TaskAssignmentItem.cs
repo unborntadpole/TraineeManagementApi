@@ -18,7 +18,7 @@ public class TaskAssignment
     public long LearningTaskId { get; set; }
     public LearningTask LearningTask { get; set; }
 
-    // public long SubmissionId { get; set; }
+    // public long SubmissionId {a get; set; }
     // public Submission? Submission { get; set; }
 
     public ICollection<Submission> Submissions { get; }
